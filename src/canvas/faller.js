@@ -1,7 +1,6 @@
 export default function createFaller(canvas, filename, width, height, scatter = 0) {
   const RANDOM_NUMBERS_COUNT = 512;
   const randomNumbers = Array(RANDOM_NUMBERS_COUNT).fill(0).map(() => (Math.random() * 255 << 0));
-  const COLOR_WHITE = [255, 255, 255, 0];
   const invWidth = 1 / width;
 
   let canvasData;
@@ -70,6 +69,7 @@ export default function createFaller(canvas, filename, width, height, scatter = 
 
   function update() {
     const minLooper = firstRow * width;
+    flip = !flip;
 
     let y;
     let x;
@@ -83,18 +83,24 @@ export default function createFaller(canvas, filename, width, height, scatter = 
     let leftOn;
     let rightOn;
     let offset;
-    flip = !flip;
+
+    const localPixels = pixels;
+    const localFlip = flip;
+    const localWidth = width;
+    const localHeight = height;
+    const localScatter = scatter;
 
     do {
       looper--;
       y = (looper * invWidth) << 0;
-      xx = looper % width;
-      x = flip ? xx : width - xx - 1;
+      xx = looper - y * localWidth;
+      x = localFlip ? xx : localWidth - xx - 1;
 
-      if (x < newLeft - 1 || x > newRight + 1) continue;
+      if (x < newLeft - 1) continue;
+      if (x > newRight + 1) continue;
 
-      index = (x + y * width) << 2;
-      if (pixels[index + 3] === 0) continue;
+      index = (x + y * localWidth) << 2;
+      if (localPixels[index + 3] === 0) continue;
 
       if (x < newLeft) {
         newLeft = x;
@@ -104,47 +110,47 @@ export default function createFaller(canvas, filename, width, height, scatter = 
 
       newFirstRow = y;
 
-      if (random() < scatter) continue;
-      beneathIndex = index + (width << 2);
+      if (random() < localScatter) continue;
+      beneathIndex = index + (localWidth << 2);
 
       if (
-        pixels[beneathIndex + 3] === 0 &&
-        y < height - 1
+        localPixels[beneathIndex + 3] === 0 &&
+        y <= localHeight
       ) {
         setPixel(
-          pixels,
+          localPixels,
           beneathIndex,
-          setPixel(pixels, index, COLOR_WHITE)
+          setPixel(localPixels, index, [255, 255, 255, 0])
         );
         continue;
       }
 
-      if (pixels[beneathIndex + 3] === 0) continue;
+      if (localPixels[beneathIndex + 3] === 0) continue;
 
       leftOn =
         x === 0 ||
-        pixels[beneathIndex - 1] !== 0;
+        localPixels[beneathIndex - 1] !== 0;
 
       rightOn =
-        x === width ||
-        pixels[beneathIndex + 7] !== 0;
+        x === localWidth ||
+        localPixels[beneathIndex + 7] !== 0;
 
-      if (!leftOn && !rightOn) {
+      if (leftOn === false && rightOn === false) {
         offset = random() > 127 ? -4 : 4;
-      } else if (!leftOn) {
+      } else if (leftOn === false) {
         offset = -4;
-      } else if (!rightOn) {
+      } else if (rightOn === false) {
         offset = 4;
       } else {
         continue;
       }
 
       setPixel(
-        pixels,
+        localPixels,
         beneathIndex + offset,
-        setPixel(pixels, index, COLOR_WHITE)
+        setPixel(localPixels, index, [255, 255, 255, 0])
       );
-    } while (looper > minLooper);
+    } while (looper !== minLooper);
 
     left = newLeft;
     right = newRight;
