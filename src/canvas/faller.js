@@ -133,17 +133,8 @@ export default function createFaller(canvas, filename, width, height, scatter = 
 
       if (pixels[beneathIndex + 3] === 0) continue;
 
-      if (x === 0) {
-        leftOn = true;
-      } else {
-        leftOn = pixels[beneathIndex - 1] !== 0;
-      }
-
-      if (x === width - 1) {
-        rightOn = true;
-      } else {
-        rightOn = pixels[beneathIndex + 7] !== 0;
-      }
+      leftOn = (x === 0) ? true : pixels[beneathIndex - 1] !== 0;
+      rightOn = (x === width - 1) ? true : pixels[beneathIndex + 7] !== 0;
 
       if (leftOn === false && rightOn === false) {
         offset = random() > 127 ? -4 : 4;
