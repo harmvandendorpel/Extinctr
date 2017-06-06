@@ -1,15 +1,15 @@
 export default function createFaller(canvas, filename, width, height, scatter = 0) {
-  const RANDOM_NUMBERS_COUNT = 512;
+  const RANDOM_NUMBERS_COUNT = 2048;
   const randomNumbers = Array(RANDOM_NUMBERS_COUNT).fill(0).map(() => (Math.random() * 255 << 0));
   const invWidth = 1 / width;
 
   let canvasData;
   let ctx;
-  let pixels;
   let startIndex = null;
   let randomIndex = 0;
   let pixelsLength = null;
   let flip = true;
+  const widthx4 = width << 2;
 
   let left = null;
   let right = null;
@@ -25,6 +25,13 @@ export default function createFaller(canvas, filename, width, height, scatter = 
   }
 
   function setPixel(data, index, color) {
+    data[index] = color[0];
+    data[index + 1] = color[1];
+    data[index + 2] = color[2];
+    data[index + 3] = color[3];
+  }
+
+  function setReturnPixel(data, index, color) {
     const previousColor = [
       data[index],
       data[index + 1],
@@ -40,7 +47,7 @@ export default function createFaller(canvas, filename, width, height, scatter = 
 
   function random() {
     randomIndex++;
-    randomIndex %= RANDOM_NUMBERS_COUNT;
+    if (randomIndex > RANDOM_NUMBERS_COUNT) randomIndex = 0;
     return randomNumbers[randomIndex];
   }
 
@@ -57,7 +64,7 @@ export default function createFaller(canvas, filename, width, height, scatter = 
       if (newRight !== null && x > newRight + 2) continue;
 
       const index = (x + y * width) << 2;
-      if (pixels[index + 3] === 0) continue;
+      if (canvasData.data[index + 3] === 0) continue;
 
       if (newLeft === null || x < newLeft) newLeft = x;
       if (newRight === null || x > newRight) newRight = x;
@@ -67,13 +74,12 @@ export default function createFaller(canvas, filename, width, height, scatter = 
     right = newRight;
   }
 
-  function update() {
+  function startUpdating() {
     const minLooper = firstRow * width;
     flip = !flip;
 
     let y;
     let x;
-    let xx;
     let index;
     let newFirstRow;
     let beneathIndex;
@@ -83,24 +89,24 @@ export default function createFaller(canvas, filename, width, height, scatter = 
     let leftOn;
     let rightOn;
     let offset;
-
-    const localPixels = pixels;
-    const localFlip = flip;
-    const localWidth = width;
-    const localHeight = height;
-    const localScatter = scatter;
+    const pixels = canvasData.data;
 
     do {
       looper--;
       y = (looper * invWidth) << 0;
-      x = looper - y * localWidth;
-      if (localFlip) x = localWidth - x - 1
+      x = looper - y * width;
+      if (flip) x = width - x - 1;
 
-      if (x < newLeft - 1) continue;
+      if (x < newLeft - 1) {
+        if (!flip) {
+          looper -= newLeft + (width - newRight);
+        }
+        continue;
+      }
       if (x > newRight + 1) continue;
 
-      index = (x + y * localWidth) << 2;
-      if (localPixels[index + 3] === 0) continue;
+      index = (x + y * width) << 2;
+      if (pixels[index + 3] === 0) continue;
 
       if (x < newLeft) {
         newLeft = x;
@@ -110,30 +116,34 @@ export default function createFaller(canvas, filename, width, height, scatter = 
 
       newFirstRow = y;
 
-      if (random() < localScatter) continue;
-      beneathIndex = index + (localWidth << 2);
+      if (random() < scatter) continue;
+      beneathIndex = index + widthx4;
 
       if (
-        localPixels[beneathIndex + 3] === 0 &&
-        y <= localHeight
+        pixels[beneathIndex + 3] === 0 &&
+        y < height
       ) {
         setPixel(
-          localPixels,
+          pixels,
           beneathIndex,
-          setPixel(localPixels, index, [255, 255, 255, 0])
+          setReturnPixel(pixels, index, [255, 255, 255, 0])
         );
         continue;
       }
 
-      // if (localPixels[beneathIndex + 3] === 0) continue;
+      if (pixels[beneathIndex + 3] === 0) continue;
 
-      leftOn =
-        x === 0 ||
-        localPixels[beneathIndex - 1] !== 0;
+      if (x === 0) {
+        leftOn = true;
+      } else {
+        leftOn = pixels[beneathIndex - 1] !== 0;
+      }
 
-      rightOn =
-        x === localWidth ||
-        localPixels[beneathIndex + 7] !== 0;
+      if (x === width - 1) {
+        rightOn = true;
+      } else {
+        rightOn = pixels[beneathIndex + 7] !== 0;
+      }
 
       if (leftOn === false && rightOn === false) {
         offset = random() > 127 ? -4 : 4;
@@ -146,15 +156,19 @@ export default function createFaller(canvas, filename, width, height, scatter = 
       }
 
       setPixel(
-        localPixels,
+        pixels,
         beneathIndex + offset,
-        setPixel(localPixels, index, [255, 255, 255, 0])
+        setReturnPixel(pixels, index, [255, 255, 255, 0])
       );
-    } while (looper !== minLooper);
+    } while (looper > minLooper);
 
     left = newLeft;
     right = newRight;
     firstRow = newFirstRow;
+    setTimeout(startUpdating, 0);
+  }
+
+  function draw() {
     ctx.putImageData(canvasData, 0, 0);
   }
 
@@ -179,13 +193,12 @@ export default function createFaller(canvas, filename, width, height, scatter = 
       loadImage(filename).then((image) => {
         ctx.drawImage(image, 0, 0);
         canvasData = ctx.getImageData(0, 0, width, height);
-        pixels = canvasData.data;
-        pixelsLength = pixels.length;
+        pixelsLength = canvasData.data.length;
         startIndex = (pixelsLength >> 2) - 1;
         initBB();
         resolve();
       });
     });
   }
-  return { init, update, getState };
+  return { init, startUpdating, draw, getState };
 }

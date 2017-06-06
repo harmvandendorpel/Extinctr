@@ -27,7 +27,7 @@ export default class App extends Component {
   render() {
     return (
       <div className="main-app-container">
-        <CollapsrCanvas filename={'/img/rhino.png'} width={1800} height={1100} scatter={20} />
+        <CollapsrCanvas filename={'/img/rhino.png'} width={1800} height={1100} scatter={6} />
       </div>
     );
   }
