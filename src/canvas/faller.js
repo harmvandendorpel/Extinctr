@@ -93,8 +93,8 @@ export default function createFaller(canvas, filename, width, height, scatter = 
     do {
       looper--;
       y = (looper * invWidth) << 0;
-      xx = looper - y * localWidth;
-      x = localFlip ? xx : localWidth - xx - 1;
+      x = looper - y * localWidth;
+      if (localFlip) x = localWidth - x - 1
 
       if (x < newLeft - 1) continue;
       if (x > newRight + 1) continue;
@@ -125,7 +125,7 @@ export default function createFaller(canvas, filename, width, height, scatter = 
         continue;
       }
 
-      if (localPixels[beneathIndex + 3] === 0) continue;
+      // if (localPixels[beneathIndex + 3] === 0) continue;
 
       leftOn =
         x === 0 ||
