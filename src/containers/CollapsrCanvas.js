@@ -9,17 +9,9 @@ export default class CollapsrCanvas extends Component {
     filename: PropTypes.string.isRequired,
     width: PropTypes.number.isRequired,
     height: PropTypes.number.isRequired,
-    scatter: PropTypes.number.isRequired
+    scatter: PropTypes.number.isRequired,
+    playing: PropTypes.bool.isRequired
   };
-
-  // constructor() {
-  //   super();
-  //
-  //   this.state = {
-  //     averageFrameRate: 0,
-  //     tick: 1
-  //   };
-  // }
 
   componentDidMount() {
     faller = createFaller(
@@ -32,26 +24,17 @@ export default class CollapsrCanvas extends Component {
 
     faller.init().then(() => {
       this.drawCanvas();
-      faller.startUpdating();
+      faller.start();
     });
-    // this.lastCalledTime = Date.now();
   }
-  //
-  // updateFrameRate() {
-  //   const delta = (Date.now() - this.lastCalledTime) / 1000;
-  //   this.lastCalledTime = Date.now();
-  //   const averageFrameRate = this.state.averageFrameRate + 1 / delta;
-  //   const tick = this.state.tick + 1;
-  //   this.setState({ averageFrameRate, tick });
-  // }
 
   drawCanvas() {
     window.requestAnimationFrame(this.drawCanvas.bind(this));
     faller.draw();
-    // this.updateFrameRate();
   }
 
   render() {
+    if (this.props.playing) {}
     return (
       <canvas ref={(canvas) => { this.canvas = canvas; }} />
     );

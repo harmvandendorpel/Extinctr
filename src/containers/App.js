@@ -24,10 +24,24 @@ export default class App extends Component {
   static propTypes = {
   };
 
+  constructor() {
+    super();
+    this.playing = true;
+    setTimeout(() => {
+      this.playing = false;
+    }, 3000);
+  }
+
   render() {
     return (
       <div className="main-app-container">
-        <CollapsrCanvas filename={'/img/rhino.png'} width={1800} height={1100} scatter={6} />
+        <CollapsrCanvas
+          filename={'/img/rhino.png'}
+          width={1800}
+          height={1100}
+          scatter={6}
+          playing={this.playing ? true : undefined}
+        />
       </div>
     );
   }

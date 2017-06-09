@@ -9,6 +9,7 @@ export default function createFaller(canvas, filename, width, height, scatter = 
   let randomIndex = 0;
   let pixelsLength = null;
   let flip = true;
+  let playing = true;
   const widthx4 = width << 2;
 
   let left = null;
@@ -156,7 +157,16 @@ export default function createFaller(canvas, filename, width, height, scatter = 
     left = newLeft;
     right = newRight;
     firstRow = newFirstRow;
-    setTimeout(startUpdating, 0);
+    if (playing) setTimeout(startUpdating, 0);
+  }
+
+  function start() {
+    playing = true;
+    startUpdating();
+  }
+
+  function stopUpdating() {
+    playing = false;
   }
 
   function draw() {
@@ -165,6 +175,10 @@ export default function createFaller(canvas, filename, width, height, scatter = 
 
   function getState() {
     return { left, firstRow, right };
+  }
+
+  function isPlaying() {
+    return playing;
   }
 
   function init() {
@@ -191,5 +205,12 @@ export default function createFaller(canvas, filename, width, height, scatter = 
       });
     });
   }
-  return { init, startUpdating, draw, getState };
+  return {
+    init,
+    start,
+    stop: stopUpdating,
+    draw,
+    getState,
+    isPlaying
+  };
 }
