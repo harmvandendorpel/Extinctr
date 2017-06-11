@@ -6,7 +6,7 @@ let faller = null;
 
 export default class CollapsrCanvas extends Component {
   static propTypes = {
-    filename: PropTypes.string.isRequired,
+    image: PropTypes.object.isRequired,
     width: PropTypes.number.isRequired,
     height: PropTypes.number.isRequired,
     scatter: PropTypes.number.isRequired,
@@ -16,7 +16,7 @@ export default class CollapsrCanvas extends Component {
   componentDidMount() {
     faller = createFaller(
       this.canvas,
-      this.props.filename,
+      this.props.image,
       this.props.width,
       this.props.height,
       this.props.scatter
@@ -29,12 +29,12 @@ export default class CollapsrCanvas extends Component {
   }
 
   drawCanvas() {
+    if (!this.props.playing) return;
     window.requestAnimationFrame(this.drawCanvas.bind(this));
     faller.draw();
   }
 
   render() {
-    if (this.props.playing) {}
     return (
       <canvas ref={(canvas) => { this.canvas = canvas; }} />
     );

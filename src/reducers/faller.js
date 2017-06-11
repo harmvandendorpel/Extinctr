@@ -1,15 +1,29 @@
-import { PAUSE, PLAY, FILE_LOADED, FILE_REQUEST } from '../constants/ActionTypes';
+import { PLAY, PAUSE, FILE_LOADED, IMAGE_REQUEST } from '../constants/ActionTypes';
 
-export default function faller(state = { loaded: false, playing: false }, action) {
+const initState = {
+  loading: false,
+  loaded: false,
+  playing: false,
+  image: undefined
+};
+
+export default function faller(state = initState, action) {
   switch (action.type) {
     case PAUSE:
-      return state + 1;
+      return { ...state, playing: false };
+
     case PLAY:
-      return state - 1;
+      if (state.loaded) {
+        return { ...state, playing: true };
+      }
+      return state;
+
+    case IMAGE_REQUEST:
+      return { ...state, loading: true, playing: false };
+
     case FILE_LOADED:
-      return state + 1;
-    case FILE_REQUEST:
-      return state - 1;
+      return { ...state, loaded: true, loading: false, image: action.image };
+
     default:
       return state;
   }

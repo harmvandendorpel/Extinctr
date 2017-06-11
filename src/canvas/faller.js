@@ -1,4 +1,4 @@
-export default function createFaller(canvas, filename, width, height, scatter = 0) {
+export default function createFaller(canvas, image, width, height, scatter = 0) {
   const RANDOM_NUMBERS_COUNT = 2048;
   const randomNumbers = Array(RANDOM_NUMBERS_COUNT).fill(0).map(() => (Math.random() * 255 << 0));
   const invWidth = 1 / width;
@@ -16,14 +16,6 @@ export default function createFaller(canvas, filename, width, height, scatter = 
   let right = null;
 
   let firstRow = null;
-
-  function loadImage(src) {
-    const image = new Image();
-    return new Promise((resolve) => {
-      image.onload = () => resolve(image);
-      image.src = src;
-    });
-  }
 
   function setPixel(data, index, color) {
     data[index] = color[0];
@@ -194,16 +186,16 @@ export default function createFaller(canvas, filename, width, height, scatter = 
     ctx.webkitImageSmoothingEnabled = false;
     ctx.msImageSmoothingEnabled = false;
 
-    return new Promise((resolve) => {
-      loadImage(filename).then((image) => {
-        ctx.drawImage(image, 0, 0);
-        canvasData = ctx.getImageData(0, 0, width, height);
-        pixelsLength = canvasData.data.length;
-        startIndex = (pixelsLength >> 2) - 1;
-        initBB();
-        resolve();
-      });
-    });
+    // return new Promise((resolve) => {
+    //   loadImage(filename).then((image) => {
+    ctx.drawImage(image, 0, 0);
+    canvasData = ctx.getImageData(0, 0, width, height);
+    pixelsLength = canvasData.data.length;
+    startIndex = (pixelsLength >> 2) - 1;
+    initBB();
+        // resolve();
+    //   });
+    // });
   }
   return {
     init,

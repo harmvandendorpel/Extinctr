@@ -2,7 +2,7 @@ import { combineReducers } from 'redux';
 import faller from './faller';
 
 const rootReducer = combineReducers({
-  faller,
+  faller
 });
 
 export default rootReducer;
