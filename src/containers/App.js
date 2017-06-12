@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import DropToUpload from 'react-drop-to-upload';
+
 import * as FallerActions from '../actions/FallerActions';
 import CollapsrCanvas from '../containers/CollapsrCanvas';
 
@@ -38,6 +40,10 @@ export default class App extends Component {
     this.props.actions.play();
   }
 
+  handleDropDataURI([dataURI], [file]) {
+    this.props.actions.imageRequest(dataURI);
+  }
+
   render() {
     const faller = this.props.loaded ? (
       <div>
@@ -51,7 +57,12 @@ export default class App extends Component {
         <button onClick={this.play.bind(this)}>Play</button>
       </div>
     ) : (
-      <button onClick={this.loadImage.bind(this)}>Load</button>
+      <div>
+        <button onClick={this.loadImage.bind(this)}>Load</button>
+        <DropToUpload onDropDataURI={this.handleDropDataURI.bind(this)}>
+          Drop file here to upload
+        </DropToUpload>
+      </div>
     );
 
     return (
