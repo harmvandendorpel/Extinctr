@@ -28,8 +28,9 @@ export default class CollapsrCanvas extends Component {
   }
 
   drawCanvas() {
-    if (!this.props.playing || this.removed) return;
+    if (this.removed) return;
     window.requestAnimationFrame(this.drawCanvas.bind(this));
+    if (!this.props.playing) return;
     faller.update();
   }
 

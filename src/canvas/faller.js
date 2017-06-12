@@ -150,14 +150,8 @@ export default function createFaller(canvas, image, scatter = 0) {
     left = newLeft;
     right = newRight;
     firstRow = newFirstRow;
-    // if (playing) setTimeout(startUpdating, 0);
-    // this.draw();
     ctx.putImageData(canvasData, 0, 0);
   }
-
-  // function draw() {
-  //
-  // }
 
   function init() {
     canvas.width = width;

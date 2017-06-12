@@ -30,20 +30,25 @@ export default class App extends Component {
     this.props.actions.unloadImage();
   }
 
+  pause() {
+    this.props.actions.pause();
+  }
+
+  play() {
+    this.props.actions.play();
+  }
+
   render() {
-    const opts = {
-      image: this.props.image,
-      scatter: 6
-    };
-
-    if (this.props.playing) {
-      opts.playing = true;
-    }
-
     const faller = this.props.loaded ? (
       <div>
-        <CollapsrCanvas {...opts} />
+        <CollapsrCanvas
+          scatter={6}
+          image={this.props.image}
+          playing={this.props.playing}
+        />
         <button onClick={this.unloadImage.bind(this)}>Unload</button>
+        <button onClick={this.pause.bind(this)}>Pause</button>
+        <button onClick={this.play.bind(this)}>Play</button>
       </div>
     ) : (
       <button onClick={this.loadImage.bind(this)}>Load</button>
