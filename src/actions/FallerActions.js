@@ -1,4 +1,12 @@
-import { PLAY, PAUSE, IMAGE_REQUEST, IMAGE_LOADING, IMAGE_LOADED } from '../constants/ActionTypes';
+import {
+  PLAY,
+  PAUSE,
+  IMAGE_REQUEST,
+  IMAGE_LOADING,
+  IMAGE_LOADED,
+  IMAGE_UNLOAD
+} from '../constants/ActionTypes';
+
 import { loadImage } from '../helpers/load';
 
 export function play() {
@@ -23,6 +31,12 @@ export function imageLoaded({ image }) {
 export function imageLoading() {
   return {
     type: IMAGE_LOADING
+  };
+}
+
+export function unloadImage() {
+  return {
+    type: IMAGE_UNLOAD
   };
 }
 

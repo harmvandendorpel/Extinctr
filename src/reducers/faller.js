@@ -1,4 +1,11 @@
-import { PLAY, PAUSE, FILE_LOADED, IMAGE_REQUEST } from '../constants/ActionTypes';
+import {
+  PLAY,
+  PAUSE,
+  IMAGE_LOADING,
+  IMAGE_LOADED,
+  IMAGE_UNLOAD,
+  IMAGE_REQUEST
+} from '../constants/ActionTypes';
 
 const initState = {
   loading: false,
@@ -18,12 +25,25 @@ export default function faller(state = initState, action) {
       }
       return state;
 
-    case IMAGE_REQUEST:
+    case IMAGE_LOADING:
       return { ...state, loading: true, playing: false };
 
-    case FILE_LOADED:
-      return { ...state, loaded: true, loading: false, image: action.image };
+    case IMAGE_LOADED:
+      return {
+        ...state,
+        loaded: true,
+        loading: false,
+        playing: true,
+        image: action.image
+      };
 
+    case IMAGE_UNLOAD:
+      return {
+        ...state,
+        loaded: false,
+        playing: false,
+        image: undefined
+      };
     default:
       return state;
   }

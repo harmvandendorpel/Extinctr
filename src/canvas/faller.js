@@ -1,6 +1,8 @@
-export default function createFaller(canvas, image, width, height, scatter = 0) {
+export default function createFaller(canvas, image, scatter = 0) {
   const RANDOM_NUMBERS_COUNT = 2048;
   const randomNumbers = Array(RANDOM_NUMBERS_COUNT).fill(0).map(() => (Math.random() * 255 << 0));
+  const width = image.width;
+  const height = image.height;
   const invWidth = 1 / width;
 
   let canvasData;
@@ -9,7 +11,6 @@ export default function createFaller(canvas, image, width, height, scatter = 0) 
   let randomIndex = 0;
   let pixelsLength = null;
   let flip = true;
-  let playing = true;
   const widthx4 = width << 2;
 
   let left = null;
@@ -67,7 +68,7 @@ export default function createFaller(canvas, image, width, height, scatter = 0) 
     right = newRight;
   }
 
-  function startUpdating() {
+  function update() {
     const minLooper = firstRow * width;
     flip = !flip;
 
@@ -149,29 +150,14 @@ export default function createFaller(canvas, image, width, height, scatter = 0) 
     left = newLeft;
     right = newRight;
     firstRow = newFirstRow;
-    if (playing) setTimeout(startUpdating, 0);
-  }
-
-  function start() {
-    playing = true;
-    startUpdating();
-  }
-
-  function stopUpdating() {
-    playing = false;
-  }
-
-  function draw() {
+    // if (playing) setTimeout(startUpdating, 0);
+    // this.draw();
     ctx.putImageData(canvasData, 0, 0);
   }
 
-  function getState() {
-    return { left, firstRow, right };
-  }
-
-  function isPlaying() {
-    return playing;
-  }
+  // function draw() {
+  //
+  // }
 
   function init() {
     canvas.width = width;
@@ -186,23 +172,14 @@ export default function createFaller(canvas, image, width, height, scatter = 0) 
     ctx.webkitImageSmoothingEnabled = false;
     ctx.msImageSmoothingEnabled = false;
 
-    // return new Promise((resolve) => {
-    //   loadImage(filename).then((image) => {
     ctx.drawImage(image, 0, 0);
     canvasData = ctx.getImageData(0, 0, width, height);
     pixelsLength = canvasData.data.length;
     startIndex = (pixelsLength >> 2) - 1;
     initBB();
-        // resolve();
-    //   });
-    // });
   }
   return {
     init,
-    start,
-    stop: stopUpdating,
-    draw,
-    getState,
-    isPlaying
+    update
   };
 }

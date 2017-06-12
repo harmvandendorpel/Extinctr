@@ -7,7 +7,9 @@ import CollapsrCanvas from '../containers/CollapsrCanvas';
 
 @connect(
   state => ({
-    loaded: state.faller.loaded
+    loaded: state.faller.loaded,
+    image: state.faller.image,
+    playing: state.faller.playing
   }),
   dispatch => ({
     actions: bindActionCreators(FallerActions, dispatch)
@@ -15,22 +17,34 @@ import CollapsrCanvas from '../containers/CollapsrCanvas';
 )
 export default class App extends Component {
   static propTypes = {
-    loaded: PropTypes.bool.isRequired
+    loaded: PropTypes.bool.isRequired,
+    image: PropTypes.object,
+    playing: PropTypes.bool.isRequired
   };
 
   loadImage() {
     this.props.actions.imageRequest('/img/rhino.png');
   }
 
+  unloadImage() {
+    this.props.actions.unloadImage();
+  }
+
   render() {
+    const opts = {
+      image: this.props.image,
+      scatter: 6
+    };
+
+    if (this.props.playing) {
+      opts.playing = true;
+    }
+
     const faller = this.props.loaded ? (
-      <CollapsrCanvas
-        filename={'/img/rhino.png'}
-        width={1800}
-        height={1100}
-        scatter={6}
-        playing={this.playing ? true : undefined}
-      />
+      <div>
+        <CollapsrCanvas {...opts} />
+        <button onClick={this.unloadImage.bind(this)}>Unload</button>
+      </div>
     ) : (
       <button onClick={this.loadImage.bind(this)}>Load</button>
     );
