@@ -149,7 +149,7 @@ export default function createFaller(canvas, image, scatter = 0) {
 
     left = newLeft;
     right = newRight;
-    firstRow = newFirstRow;
+    firstRow = newFirstRow - 1;
     ctx.putImageData(canvasData, 0, 0);
   }
 
@@ -172,8 +172,14 @@ export default function createFaller(canvas, image, scatter = 0) {
     startIndex = (pixelsLength >> 2) - 1;
     initBB();
   }
+
+  function getContext() {
+    return ctx;
+  }
+
   return {
     init,
-    update
+    update,
+    getContext
   };
 }

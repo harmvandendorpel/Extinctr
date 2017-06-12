@@ -5,16 +5,19 @@ import { connect } from 'react-redux';
 import DropToUpload from 'react-drop-to-upload';
 
 import * as FallerActions from '../actions/FallerActions';
+import * as RecorderActions from '../actions/RecorderActions';
 import CollapsrCanvas from '../containers/CollapsrCanvas';
 
 @connect(
   state => ({
     loaded: state.faller.loaded,
     image: state.faller.image,
-    playing: state.faller.playing
+    playing: state.faller.playing,
+    recording: state.recorder.recording
   }),
   dispatch => ({
-    actions: bindActionCreators(FallerActions, dispatch)
+    fallerActions: bindActionCreators(FallerActions, dispatch),
+    recorderActions: bindActionCreators(RecorderActions, dispatch)
   })
 )
 export default class App extends Component {
@@ -25,23 +28,31 @@ export default class App extends Component {
   };
 
   loadImage() {
-    this.props.actions.imageRequest('/img/rhino.png');
+    this.props.fallerActions.imageRequest('/img/rhino.png');
   }
 
   unloadImage() {
-    this.props.actions.unloadImage();
+    this.props.fallerActions.unloadImage();
   }
 
   pause() {
-    this.props.actions.pause();
+    this.props.fallerActions.pause();
   }
 
   play() {
-    this.props.actions.play();
+    this.props.fallerActions.play();
   }
 
   handleDropDataURI([dataURI], [file]) {
-    this.props.actions.imageRequest(dataURI);
+    this.props.fallerActions.imageRequest(dataURI);
+  }
+
+  startRecording() {
+    this.props.recorderActions.start();
+  }
+
+  stopRecording() {
+    this.props.recorderActions.stop();
   }
 
   render() {
@@ -51,10 +62,14 @@ export default class App extends Component {
           scatter={6}
           image={this.props.image}
           playing={this.props.playing}
+          recording={this.props.recording}
+          addFrame={this.props.recorderActions.addFrame}
         />
         <button onClick={this.unloadImage.bind(this)}>Unload</button>
         <button onClick={this.pause.bind(this)}>Pause</button>
         <button onClick={this.play.bind(this)}>Play</button>
+        <button onClick={this.startRecording.bind(this)}>Start Recording</button>
+        <button onClick={this.stopRecording.bind(this)}>Stop Recording</button>
       </div>
     ) : (
       <div>

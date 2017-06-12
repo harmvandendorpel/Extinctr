@@ -1,8 +1,10 @@
 import { combineReducers } from 'redux';
 import faller from './faller';
+import recorder from './recorder';
 
 const rootReducer = combineReducers({
-  faller
+  faller,
+  recorder
 });
 
 export default rootReducer;
