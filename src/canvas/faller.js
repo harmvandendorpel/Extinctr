@@ -4,6 +4,7 @@ export default function createFaller(canvas, image, scatter = 0) {
   const width = image.width;
   const height = image.height;
   const invWidth = 1 / width;
+  const widthx4 = width << 2;
 
   let canvasData;
   let ctx;
@@ -11,7 +12,6 @@ export default function createFaller(canvas, image, scatter = 0) {
   let randomIndex = 0;
   let pixelsLength = null;
   let flip = true;
-  const widthx4 = width << 2;
 
   let left = null;
   let right = null;
@@ -153,6 +153,10 @@ export default function createFaller(canvas, image, scatter = 0) {
     ctx.putImageData(canvasData, 0, 0);
   }
 
+  function setFixedColor(color) {
+    console.log('setFixedColor', color);
+  }
+
   function init() {
     canvas.width = width;
     canvas.height = height;
@@ -180,6 +184,7 @@ export default function createFaller(canvas, image, scatter = 0) {
   return {
     init,
     update,
-    getContext
+    getContext,
+    setFixedColor
   };
 }

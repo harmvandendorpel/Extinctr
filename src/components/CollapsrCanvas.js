@@ -10,7 +10,8 @@ export default class CollapsrCanvas extends Component {
     scatter: PropTypes.number.isRequired,
     playing: PropTypes.bool.isRequired,
     addFrame: PropTypes.func.isRequired,
-    recording: PropTypes.bool.isRequired
+    recording: PropTypes.bool.isRequired,
+    fixedColor: PropTypes.bool.isRequired
   };
 
   componentDidMount() {
@@ -40,6 +41,7 @@ export default class CollapsrCanvas extends Component {
   }
 
   render() {
+    if (faller) faller.setFixedColor(this.props.fixedColor);
     return (
       <canvas className={'faller'} ref={(canvas) => { this.canvas = canvas; }} />
     );

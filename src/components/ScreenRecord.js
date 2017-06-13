@@ -14,7 +14,8 @@ import * as ColorPickerActions from '../actions/ColorPickerActions';
     playing: state.faller.playing,
     recording: state.recorder.recording,
     blobURL: state.recorder.blobURL,
-    rendering: state.recorder.rendering
+    rendering: state.recorder.rendering,
+    fixedColor: state.colorpicker.color
   }),
   {
     stopRecording: RecorderActions.stop,
@@ -41,7 +42,8 @@ export default class ScreenRecord extends Component {
     playAnimation: PropTypes.func.isRequired,
     resetImage: PropTypes.func.isRequired,
     unloadImage: PropTypes.func.isRequired,
-    setColor: PropTypes.func.isRequired
+    setColor: PropTypes.func.isRequired,
+    fixedColor: PropTypes.arrayOf(PropTypes.number).isRequired
   };
 
   static defaultProps = {
@@ -94,6 +96,7 @@ export default class ScreenRecord extends Component {
           playing={this.props.playing}
           recording={this.props.recording}
           addFrame={this.props.addFrame}
+          fixedColor={this.props.fixedColor}
         />
         {this.playPauseButton()}
         {this.recordingButton()}
