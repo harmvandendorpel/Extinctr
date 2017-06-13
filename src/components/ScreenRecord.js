@@ -50,6 +50,16 @@ export default class ScreenRecord extends Component {
       ) : null;
   }
 
+  loadingButtons() {
+    if (this.props.rendering || this.props.playing) return null;
+    return (
+      <span>
+        <button onClick={this.props.reset.bind(this)}>reset</button>
+        <button onClick={this.props.unloadImage.bind(this)}>&times;</button>
+      </span>
+    );
+  }
+
   render() {
     return (
       <div>
@@ -62,8 +72,7 @@ export default class ScreenRecord extends Component {
         />
         {this.playPauseButton()}
         {this.recordingButton()}
-        <button onClick={this.props.unloadImage.bind(this)}>&times;</button>
-        <button onClick={this.props.reset.bind(this)}>reset</button>
+        {this.loadingButtons()}
         {this.previewImage()}
       </div>
     );

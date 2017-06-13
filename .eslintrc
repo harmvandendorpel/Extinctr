@@ -21,6 +21,7 @@
     "document": true,
     "window": true,
     "Image": true,
-    "URL": true
+    "URL": true,
+    "alert": true
   }
 }
