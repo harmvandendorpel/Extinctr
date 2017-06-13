@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import DropToUpload from 'react-drop-to-upload';
 
 import * as FallerActions from '../actions/FallerActions';
 import * as RecorderActions from '../actions/RecorderActions';
-import CollapsrCanvas from '../containers/CollapsrCanvas';
+import ScreenUpload from '../components/ScreenUpload';
+import ScreenRecord from '../components/ScreenRecord';
 
 @connect(
   state => ({
@@ -30,79 +30,28 @@ export default class App extends Component {
     blobURL: PropTypes.string
   };
 
-  loadImage() {
-    this.props.fallerActions.imageRequest('/img/rhino.png');
-  }
-
-  unloadImage() {
-    this.props.fallerActions.unloadImage();
-  }
-
-  pause() {
-    this.props.fallerActions.pause();
-  }
-
-  play() {
-    this.props.fallerActions.play();
-  }
-
-  handleDropDataURI([dataURI], [file]) {
-    this.props.fallerActions.imageRequest(dataURI);
-  }
-
-  startRecording() {
-    this.props.recorderActions.start();
-  }
-
-  stopRecording() {
-    this.props.recorderActions.stop();
-  }
-
   render() {
-    const recordingButton = this.props.recording ?
-      (<button onClick={this.stopRecording.bind(this)}>■</button>) :
-      (<button onClick={this.startRecording.bind(this)}>●</button>);
-
-    const playPauseButton = this.props.playing ?
-      (<button onClick={this.pause.bind(this)}>‖</button>) :
-      (<button onClick={this.play.bind(this)}>▶</button>);
-
-    const previewImage = this.props.blobURL !== undefined ?
-      (
-        <img
-          alt="preview"
-          src={this.props.blobURL}
-          width={this.props.image.width / window.devicePixelRatio}
-          height={this.props.image.height / window.devicePixelRatio}
-        />
-      ) : null;
-
-    const faller = this.props.loaded ? (
-      <div>
-        <CollapsrCanvas
-          scatter={6}
-          image={this.props.image}
-          playing={this.props.playing}
-          recording={this.props.recording}
-          addFrame={this.props.recorderActions.addFrame}
-        />
-        <button onClick={this.unloadImage.bind(this)}>Unload</button>
-        {playPauseButton}
-        {recordingButton}
-        {previewImage}
-      </div>
-    ) : (
-      <div>
-        <button onClick={this.loadImage.bind(this)}>Load</button>
-        <DropToUpload onDropDataURI={this.handleDropDataURI.bind(this)}>
-          Drop file here to upload
-        </DropToUpload>
-      </div>
-    );
+    const screen = this.props.loaded ?
+      (<ScreenRecord
+        recording={this.props.recording}
+        playing={this.props.playing}
+        blobURL={this.props.blobURL}
+        image={this.props.image}
+        play={this.props.fallerActions.play}
+        pause={this.props.fallerActions.pause}
+        unloadImage={this.props.fallerActions.unloadImage}
+        startRecording={this.props.recorderActions.start}
+        stopRecording={this.props.recorderActions.stop}
+        addFrame={this.props.recorderActions.addFrame}
+      />)
+    :
+      (<ScreenUpload
+        imageRequest={this.props.fallerActions.imageRequest}
+      />);
 
     return (
       <div className="main-app-container">
-        { faller }
+        { screen }
       </div>
     );
   }
