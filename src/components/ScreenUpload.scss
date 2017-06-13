@@ -1,0 +1,9 @@
+.dropArea {
+  padding: 50px;
+  border: 1px dashed #bbb;
+  border-radius: 10px;
+
+  &__hover {
+    background-color: rgba(200,255,230, 0.5);
+  }
+}

@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import DropToUpload from 'react-drop-to-upload';
 import classNames from 'classnames';
+import './ScreenUpload.scss';
+
 
 export default class ScreenUpload extends Component {
   static propTypes = {
