@@ -13,7 +13,8 @@ import CollapsrCanvas from '../containers/CollapsrCanvas';
     loaded: state.faller.loaded,
     image: state.faller.image,
     playing: state.faller.playing,
-    recording: state.recorder.recording
+    recording: state.recorder.recording,
+    blobURL: state.recorder.blobURL
   }),
   dispatch => ({
     fallerActions: bindActionCreators(FallerActions, dispatch),
@@ -24,7 +25,9 @@ export default class App extends Component {
   static propTypes = {
     loaded: PropTypes.bool.isRequired,
     image: PropTypes.object,
-    playing: PropTypes.bool.isRequired
+    playing: PropTypes.bool.isRequired,
+    recording: PropTypes.bool.isRequired,
+    blobURL: PropTypes.string
   };
 
   loadImage() {
@@ -56,6 +59,24 @@ export default class App extends Component {
   }
 
   render() {
+    const recordingButton = this.props.recording ?
+      (<button onClick={this.stopRecording.bind(this)}>■</button>) :
+      (<button onClick={this.startRecording.bind(this)}>●</button>);
+
+    const playPauseButton = this.props.playing ?
+      (<button onClick={this.pause.bind(this)}>‖</button>) :
+      (<button onClick={this.play.bind(this)}>▶</button>);
+
+    const previewImage = this.props.blobURL !== undefined ?
+      (
+        <img
+          alt="preview"
+          src={this.props.blobURL}
+          width={this.props.image.width / window.devicePixelRatio}
+          height={this.props.image.height / window.devicePixelRatio}
+        />
+      ) : null;
+
     const faller = this.props.loaded ? (
       <div>
         <CollapsrCanvas
@@ -66,10 +87,9 @@ export default class App extends Component {
           addFrame={this.props.recorderActions.addFrame}
         />
         <button onClick={this.unloadImage.bind(this)}>Unload</button>
-        <button onClick={this.pause.bind(this)}>Pause</button>
-        <button onClick={this.play.bind(this)}>Play</button>
-        <button onClick={this.startRecording.bind(this)}>Start Recording</button>
-        <button onClick={this.stopRecording.bind(this)}>Stop Recording</button>
+        {playPauseButton}
+        {recordingButton}
+        {previewImage}
       </div>
     ) : (
       <div>

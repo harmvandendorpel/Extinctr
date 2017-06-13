@@ -32,10 +32,11 @@ export function addFrame(frame) {
 
 export function stop() {
   return (dispatch, getState) => {
+    dispatch({ type: RECORDING_STOP });
     dispatch({ type: RECORDING_RENDERING });
 
-    recorder.save().then((gif) => {
-      dispatch({ type: RECORDING_DONE, gif });
+    recorder.save().then((blobURL) => {
+      dispatch({ type: RECORDING_DONE, blobURL });
     });
   };
 }
