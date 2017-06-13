@@ -3,7 +3,9 @@ import {
   RECORDING_STOP,
   RECORDING_DONE,
   RECORDING_RENDERING,
-  RECORDING_ADD_FRAME
+  RECORDING_ADD_FRAME,
+  PLAY,
+  PAUSE
 } from '../constants/ActionTypes';
 import createRecorder from '../canvas/recorder';
 
@@ -11,13 +13,17 @@ let recorder = null;
 
 export function start() {
   return (dispatch, getState) => {
-    if (getState().faller.playing) {
-      recorder = createRecorder({});
+    recorder = createRecorder({});
 
+    if (!getState().faller.playing) {
       dispatch({
-        type: RECORDING_START
+        type: PLAY
       });
     }
+
+    dispatch({
+      type: RECORDING_START
+    });
   };
 }
 
@@ -29,9 +35,9 @@ export function addFrame(frame) {
   };
 }
 
-
 export function stop() {
-  return (dispatch, getState) => {
+  return (dispatch) => {
+    dispatch({ type: PAUSE });
     dispatch({ type: RECORDING_STOP });
     dispatch({ type: RECORDING_RENDERING });
 

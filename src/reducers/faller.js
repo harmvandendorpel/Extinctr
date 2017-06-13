@@ -33,7 +33,7 @@ export default function faller(state = initState, action) {
         ...state,
         loaded: true,
         loading: false,
-        playing: true,
+        playing: false,
         image: action.image
       };
 
