@@ -21,10 +21,11 @@ export function pause() {
   };
 }
 
-export function imageLoaded({ image }) {
+export function imageLoaded({ image, filename }) {
   return {
     type: IMAGE_LOADED,
-    image
+    image,
+    filename
   };
 }
 
@@ -43,6 +44,14 @@ export function unloadImage() {
 export function imageRequest(filename) {
   return (dispatch) => {
     dispatch(imageLoading());
-    loadImage(filename).then(image => dispatch(imageLoaded({ image })));
+    loadImage(filename).then(image => dispatch(imageLoaded({ image, filename })));
+  };
+}
+
+export function resetImage() {
+  return (dispatch, getState) => {
+    const filename = getState().faller.filename;
+    dispatch(unloadImage());
+    dispatch(imageRequest(filename));
   };
 }

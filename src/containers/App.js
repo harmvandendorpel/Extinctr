@@ -51,6 +51,7 @@ export default class App extends Component {
         stopRecording={this.props.recorderActions.stop}
         addFrame={this.props.recorderActions.addFrame}
         rendering={this.props.rendering}
+        reset={this.props.fallerActions.resetImage}
       />)
     :
       (<ScreenUpload

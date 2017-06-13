@@ -15,7 +15,8 @@ export default class ScreenRecord extends Component {
     unloadImage: PropTypes.func.isRequired,
     startRecording: PropTypes.func.isRequired,
     stopRecording: PropTypes.func.isRequired,
-    rendering: PropTypes.bool.isRequired
+    rendering: PropTypes.bool.isRequired,
+    reset: PropTypes.func.isRequired
   };
 
   static defaultProps = {
@@ -62,6 +63,7 @@ export default class ScreenRecord extends Component {
         {this.playPauseButton()}
         {this.recordingButton()}
         <button onClick={this.props.unloadImage.bind(this)}>&times;</button>
+        <button onClick={this.props.reset.bind(this)}>reset</button>
         {this.previewImage()}
       </div>
     );

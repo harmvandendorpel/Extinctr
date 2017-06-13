@@ -11,7 +11,8 @@ const initState = {
   loading: false,
   loaded: false,
   playing: false,
-  image: undefined
+  image: null,
+  filename: null
 };
 
 export default function faller(state = initState, action) {
@@ -34,7 +35,8 @@ export default function faller(state = initState, action) {
         loaded: true,
         loading: false,
         playing: false,
-        image: action.image
+        image: action.image,
+        filename: action.filename
       };
 
     case IMAGE_UNLOAD:
@@ -42,8 +44,10 @@ export default function faller(state = initState, action) {
         ...state,
         loaded: false,
         playing: false,
-        image: undefined
+        image: null,
+        filename: null
       };
+
     default:
       return state;
   }

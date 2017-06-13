@@ -9,7 +9,7 @@ import {
 const initState = {
   recording: false,
   rendering: false,
-  blobURL: undefined
+  blobURL: null
 };
 
 export default function recorderReducer(state = initState, action) {
@@ -19,7 +19,7 @@ export default function recorderReducer(state = initState, action) {
         ...state,
         recording: true,
         rendering: false,
-        blobURL: undefined
+        blobURL: null
       };
 
     case RECORDING_ADD_FRAME:
