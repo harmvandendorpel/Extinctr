@@ -7,16 +7,23 @@ $accent-black: #35342f;
 $accent-orange: #ec6b2d;
 $accent-red: #dd6464;
 
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
 body {
   background-color: $main-bg-color;
   color: $accent-black;
-  display: flex;
-  justify-content: center;
   font-family: 'Raleway', sans-serif;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .main-app-container {
-  padding-top: 2em;
 }
 
 .main-app-nav {

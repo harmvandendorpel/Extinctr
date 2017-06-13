@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import CollapsrCanvas from '../containers/CollapsrCanvas';
+import CollapsrCanvas from './CollapsrCanvas';
+import './CollapsrCanvas.scss';
 
 export default class ScreenRecord extends Component {
   static propTypes = {
