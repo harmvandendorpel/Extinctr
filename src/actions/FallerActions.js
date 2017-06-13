@@ -1,7 +1,6 @@
 import {
   PLAY,
   PAUSE,
-  IMAGE_REQUEST,
   IMAGE_LOADING,
   IMAGE_LOADED,
   IMAGE_UNLOAD
@@ -44,7 +43,9 @@ export function unloadImage() {
 export function imageRequest(filename) {
   return (dispatch) => {
     dispatch(imageLoading());
-    loadImage(filename).then(image => dispatch(imageLoaded({ image, filename })));
+    loadImage(filename)
+      .then(image => dispatch(imageLoaded({ image, filename })))
+      .catch(() => alert('is that really an image?'));
   };
 }
 

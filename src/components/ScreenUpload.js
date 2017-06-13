@@ -42,7 +42,7 @@ export default class ScreenUpload extends Component {
           onLeave={this.handleLeaveDropUpload.bind(this)}
           onDropDataURI={this.handleDropDataURI.bind(this)}
         >
-          <div className={dropAreaClassNames}>Drop file here to upload</div>
+          <div className={dropAreaClassNames}>drop image here</div>
         </DropToUpload>
       </div>
     );
