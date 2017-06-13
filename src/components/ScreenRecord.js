@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import CollapsrCanvas from './CollapsrCanvas';
+import ColorPicker from './ColorPicker';
 import './CollapsrCanvas.scss';
 
 export default class ScreenRecord extends Component {
@@ -17,7 +18,8 @@ export default class ScreenRecord extends Component {
     startRecording: PropTypes.func.isRequired,
     stopRecording: PropTypes.func.isRequired,
     rendering: PropTypes.bool.isRequired,
-    reset: PropTypes.func.isRequired
+    reset: PropTypes.func.isRequired,
+    setColor: PropTypes.func.isRequired
   };
 
   static defaultProps = {
@@ -61,6 +63,10 @@ export default class ScreenRecord extends Component {
     );
   }
 
+  colorPicked(color) {
+    this.props.setColor(color);
+  }
+
   render() {
     return (
       <div>
@@ -74,6 +80,7 @@ export default class ScreenRecord extends Component {
         {this.playPauseButton()}
         {this.recordingButton()}
         {this.loadingButtons()}
+        <ColorPicker canvasSelector={'.faller'} onPick={this.colorPicked.bind(this)} />
         {this.previewImage()}
       </div>
     );

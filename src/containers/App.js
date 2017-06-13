@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 
 import * as FallerActions from '../actions/FallerActions';
 import * as RecorderActions from '../actions/RecorderActions';
+import * as ColorPickerActions from '../actions/ColorPickerActions';
+
 import ScreenUpload from '../components/ScreenUpload';
 import ScreenRecord from '../components/ScreenRecord';
 
@@ -19,7 +21,8 @@ import ScreenRecord from '../components/ScreenRecord';
   }),
   dispatch => ({
     fallerActions: bindActionCreators(FallerActions, dispatch),
-    recorderActions: bindActionCreators(RecorderActions, dispatch)
+    recorderActions: bindActionCreators(RecorderActions, dispatch),
+    colorPickerActions: bindActionCreators(ColorPickerActions, dispatch),
   })
 )
 export default class App extends Component {
@@ -52,6 +55,7 @@ export default class App extends Component {
         addFrame={this.props.recorderActions.addFrame}
         rendering={this.props.rendering}
         reset={this.props.fallerActions.resetImage}
+        setColor={this.props.colorPickerActions.setColor}
       />)
     :
       (<ScreenUpload
