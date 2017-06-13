@@ -1,71 +1,22 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-
-import * as FallerActions from '../actions/FallerActions';
-import * as RecorderActions from '../actions/RecorderActions';
-import * as ColorPickerActions from '../actions/ColorPickerActions';
 
 import ScreenUpload from '../components/ScreenUpload';
 import ScreenRecord from '../components/ScreenRecord';
 
 @connect(
   state => ({
-    loaded: state.faller.loaded,
-    image: state.faller.image,
-    playing: state.faller.playing,
-    recording: state.recorder.recording,
-    blobURL: state.recorder.blobURL,
-    rendering: state.recorder.rendering
-  }),
-  dispatch => ({
-    fallerActions: bindActionCreators(FallerActions, dispatch),
-    recorderActions: bindActionCreators(RecorderActions, dispatch),
-    colorPickerActions: bindActionCreators(ColorPickerActions, dispatch),
+    imageLoaded: state.faller.loaded
   })
 )
 export default class App extends Component {
   static propTypes = {
-    loaded: PropTypes.bool.isRequired,
-    image: PropTypes.object,
-    playing: PropTypes.bool.isRequired,
-    rendering: PropTypes.bool.isRequired,
-    recording: PropTypes.bool.isRequired,
-    blobURL: PropTypes.string
-  };
-
-  static defaultProps = {
-    blobURL: null,
-    image: null
+    imageLoaded: PropTypes.bool.isRequired
   };
 
   render() {
-    const screen = this.props.loaded ?
-      (<ScreenRecord
-        recording={this.props.recording}
-        playing={this.props.playing}
-        blobURL={this.props.blobURL}
-        image={this.props.image}
-        play={this.props.fallerActions.play}
-        pause={this.props.fallerActions.pause}
-        unloadImage={this.props.fallerActions.unloadImage}
-        startRecording={this.props.recorderActions.start}
-        stopRecording={this.props.recorderActions.stop}
-        addFrame={this.props.recorderActions.addFrame}
-        rendering={this.props.rendering}
-        reset={this.props.fallerActions.resetImage}
-        setColor={this.props.colorPickerActions.setColor}
-      />)
-    :
-      (<ScreenUpload
-        imageRequest={this.props.fallerActions.imageRequest}
-      />);
-
-    return (
-      <div className="main-app-container">
-        { screen }
-      </div>
-    );
+    const screen = this.props.imageLoaded ? <ScreenRecord /> : <ScreenUpload />;
+    return <div className="main-app-container">{ screen }</div>;
   }
 }

@@ -1,24 +1,46 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import CollapsrCanvas from './CollapsrCanvas';
 import ColorPicker from './ColorPicker';
 import './CollapsrCanvas.scss';
+import * as FallerActions from '../actions/FallerActions';
+import * as RecorderActions from '../actions/RecorderActions';
+import * as ColorPickerActions from '../actions/ColorPickerActions';
 
+@connect(
+  state => ({
+    image: state.faller.image,
+    playing: state.faller.playing,
+    recording: state.recorder.recording,
+    blobURL: state.recorder.blobURL,
+    rendering: state.recorder.rendering
+  }),
+  {
+    stopRecording: RecorderActions.stop,
+    startRecording: RecorderActions.start,
+    addFrame: RecorderActions.addFrame,
+    pauseAnimation: FallerActions.pause,
+    playAnimation: FallerActions.play,
+    resetImage: FallerActions.resetImage,
+    unloadImage: FallerActions.unloadImage,
+    setColor: ColorPickerActions.setColor
+  }
+)
 export default class ScreenRecord extends Component {
   static propTypes = {
     recording: PropTypes.bool.isRequired,
     playing: PropTypes.bool.isRequired,
     blobURL: PropTypes.string,
     image: PropTypes.object.isRequired,
-
-    addFrame: PropTypes.func.isRequired,
-    play: PropTypes.func.isRequired,
-    pause: PropTypes.func.isRequired,
-    unloadImage: PropTypes.func.isRequired,
-    startRecording: PropTypes.func.isRequired,
-    stopRecording: PropTypes.func.isRequired,
     rendering: PropTypes.bool.isRequired,
-    reset: PropTypes.func.isRequired,
+    stopRecording: PropTypes.func.isRequired,
+    startRecording: PropTypes.func.isRequired,
+    addFrame: PropTypes.func.isRequired,
+    pauseAnimation: PropTypes.func.isRequired,
+    playAnimation: PropTypes.func.isRequired,
+    resetImage: PropTypes.func.isRequired,
+    unloadImage: PropTypes.func.isRequired,
     setColor: PropTypes.func.isRequired
   };
 
@@ -37,8 +59,8 @@ export default class ScreenRecord extends Component {
 
   playPauseButton() {
     return this.props.playing ?
-      (<button onClick={this.props.pause.bind(this)}>‖</button>) :
-      (<button onClick={this.props.play.bind(this)}>▶</button>);
+      (<button onClick={this.props.pauseAnimation.bind(this)}>‖</button>) :
+      (<button onClick={this.props.playAnimation.bind(this)}>▶</button>);
   }
 
   previewImage() {
@@ -57,14 +79,10 @@ export default class ScreenRecord extends Component {
     if (this.props.rendering || this.props.playing) return null;
     return (
       <span>
-        <button onClick={this.props.reset.bind(this)}>reset</button>
+        <button onClick={this.props.resetImage.bind(this)}>reset</button>
         <button onClick={this.props.unloadImage.bind(this)}>&times;</button>
       </span>
     );
-  }
-
-  colorPicked(color) {
-    this.props.setColor(color);
   }
 
   render() {
@@ -80,7 +98,7 @@ export default class ScreenRecord extends Component {
         {this.playPauseButton()}
         {this.recordingButton()}
         {this.loadingButtons()}
-        <ColorPicker canvasSelector={'.faller'} onPick={this.colorPicked.bind(this)} />
+        <ColorPicker canvasSelector={'.faller'} onPick={this.props.setColor.bind(this)} />
         {this.previewImage()}
       </div>
     );

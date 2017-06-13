@@ -1,15 +1,18 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import DropToUpload from 'react-drop-to-upload';
 import classNames from 'classnames';
+import { connect } from 'react-redux';
 import './ScreenUpload.scss';
 
+import { imageRequest } from '../actions/FallerActions';
 
+@connect(
+  () => ({}),
+  {
+    imageRequest
+  }
+)
 export default class ScreenUpload extends Component {
-  static propTypes = {
-    imageRequest: PropTypes.func.isRequired
-  };
-
   constructor(props, context) {
     super(props, context);
     this.state = {
