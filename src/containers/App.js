@@ -14,7 +14,8 @@ import ScreenRecord from '../components/ScreenRecord';
     image: state.faller.image,
     playing: state.faller.playing,
     recording: state.recorder.recording,
-    blobURL: state.recorder.blobURL
+    blobURL: state.recorder.blobURL,
+    rendering: state.recorder.rendering
   }),
   dispatch => ({
     fallerActions: bindActionCreators(FallerActions, dispatch),
@@ -26,8 +27,14 @@ export default class App extends Component {
     loaded: PropTypes.bool.isRequired,
     image: PropTypes.object,
     playing: PropTypes.bool.isRequired,
+    rendering: PropTypes.bool.isRequired,
     recording: PropTypes.bool.isRequired,
     blobURL: PropTypes.string
+  };
+
+  static defaultProps = {
+    blobURL: null,
+    image: null
   };
 
   render() {
@@ -43,6 +50,7 @@ export default class App extends Component {
         startRecording={this.props.recorderActions.start}
         stopRecording={this.props.recorderActions.stop}
         addFrame={this.props.recorderActions.addFrame}
+        rendering={this.props.rendering}
       />)
     :
       (<ScreenUpload

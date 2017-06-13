@@ -14,19 +14,31 @@ export default class ScreenRecord extends Component {
     pause: PropTypes.func.isRequired,
     unloadImage: PropTypes.func.isRequired,
     startRecording: PropTypes.func.isRequired,
-    stopRecording: PropTypes.func.isRequired
+    stopRecording: PropTypes.func.isRequired,
+    rendering: PropTypes.bool.isRequired
   };
 
-  render() {
-    const recordingButton = this.props.recording ?
+  static defaultProps = {
+    blobURL: null
+  };
+
+  recordingButton() {
+    if (this.props.rendering) {
+      return (<button>rendering...</button>);
+    }
+    return this.props.recording ?
       (<button onClick={this.props.stopRecording.bind(this)}>■</button>) :
       (<button onClick={this.props.startRecording.bind(this)}>●</button>);
+  }
 
-    const playPauseButton = this.props.playing ?
+  playPauseButton() {
+    return this.props.playing ?
       (<button onClick={this.props.pause.bind(this)}>‖</button>) :
       (<button onClick={this.props.play.bind(this)}>▶</button>);
+  }
 
-    const previewImage = this.props.blobURL !== undefined ?
+  previewImage() {
+    return this.props.blobURL !== null ?
       (
         <img
           alt="preview"
@@ -35,19 +47,23 @@ export default class ScreenRecord extends Component {
           height={this.props.image.height / window.devicePixelRatio}
         />
       ) : null;
+  }
 
-    return (<div>
-      <CollapsrCanvas
-        scatter={6}
-        image={this.props.image}
-        playing={this.props.playing}
-        recording={this.props.recording}
-        addFrame={this.props.addFrame}
-      />
-      {playPauseButton}
-      {recordingButton}
-      <button onClick={this.props.unloadImage.bind(this)}>&times;</button>
-      {previewImage}
-    </div>);
+  render() {
+    return (
+      <div>
+        <CollapsrCanvas
+          scatter={6}
+          image={this.props.image}
+          playing={this.props.playing}
+          recording={this.props.recording}
+          addFrame={this.props.addFrame}
+        />
+        {this.playPauseButton()}
+        {this.recordingButton()}
+        <button onClick={this.props.unloadImage.bind(this)}>&times;</button>
+        {this.previewImage()}
+      </div>
+    );
   }
 }
