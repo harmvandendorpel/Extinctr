@@ -4,7 +4,8 @@ export default function createRecorder({ workers = 5, quality = 10, delay = 50 }
   const gif = new GIF({
     workers,
     quality,
-    debug: true
+    debug: true,
+    background: '#ffffff'
   });
 
   function addFrame(canvas) {

@@ -60,6 +60,7 @@ export default class ScreenRecord extends Component {
   }
 
   playPauseButton() {
+    if (this.props.recording) return null;
     return this.props.playing ?
       (<button onClick={this.props.pauseAnimation.bind(this)}>‖</button>) :
       (<button onClick={this.props.playAnimation.bind(this)}>▶</button>);

@@ -11,7 +11,7 @@ export default class CollapsrCanvas extends Component {
     playing: PropTypes.bool.isRequired,
     addFrame: PropTypes.func.isRequired,
     recording: PropTypes.bool.isRequired,
-    fixedColor: PropTypes.bool.isRequired
+    fixedColor: PropTypes.array.isRequired
   };
 
   componentDidMount() {

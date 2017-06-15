@@ -32,6 +32,16 @@ export default class ScreenUpload extends Component {
     this.props.imageRequest(dataURI);
   }
 
+  loadTransTest() {
+    this.props.imageRequest('/img/test4.png');
+  }
+
+
+  loadWhiteTest() {
+    this.props.imageRequest('/img/test3.png');
+  }
+
+
   render() {
     const dropAreaClassNames = classNames(
       'dropArea',
@@ -47,6 +57,8 @@ export default class ScreenUpload extends Component {
         >
           <div className={dropAreaClassNames}>drop image here</div>
         </DropToUpload>
+        <button onClick={this.loadTransTest.bind(this)}>trans bg</button>
+        <button onClick={this.loadWhiteTest.bind(this)}>white bg</button>
       </div>
     );
   }

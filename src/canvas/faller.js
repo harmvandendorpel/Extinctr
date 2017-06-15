@@ -8,10 +8,16 @@ export default function createFaller(canvas, image, scatter = 0) {
 
   let canvasData;
   let ctx;
+
+  let scratchCanvas;
+  let scratchContext;
+
   let startIndex = null;
   let randomIndex = 0;
   let pixelsLength = null;
   let flip = true;
+  let transparentColor = [255, 255, 255, 255];
+  const fixedColor = [255, 255, 255, 0];
 
   let left = null;
   let right = null;
@@ -120,7 +126,7 @@ export default function createFaller(canvas, image, scatter = 0) {
         setPixel(
           pixels,
           beneathIndex,
-          setReturnPixel(pixels, index, [255, 255, 255, 0])
+          setReturnPixel(pixels, index, fixedColor)
         );
         continue;
       }
@@ -143,38 +149,99 @@ export default function createFaller(canvas, image, scatter = 0) {
       setPixel(
         pixels,
         beneathIndex + offset,
-        setReturnPixel(pixels, index, [255, 255, 255, 0])
+        setReturnPixel(pixels, index, fixedColor)
       );
     } while (looper > minLooper);
 
     left = newLeft;
     right = newRight;
     firstRow = newFirstRow - 1;
-    ctx.putImageData(canvasData, 0, 0);
+
+    draw();
+  }
+
+  function draw() {
+    ctx.fillStyle = `rgba(${transparentColor[0]},${transparentColor[1]},${transparentColor[2]},${transparentColor[3]})`;
+    ctx.fillRect(0, 0, width, height);
+    scratchContext.putImageData(canvasData, 0, 0);
+    ctx.drawImage(scratchCanvas, 0, 0);
+  }
+
+  function around(n, m, margin) {
+    return (n > m - margin && n < m + margin );
+  }
+
+  function calculateAlphaChannel(data) {
+    const pixels = data.data;
+    const margin = 3;
+    let looper = pixels.length / 4;
+
+    do {
+      const i = looper--;
+      const index = i * 4;
+      if (
+        around(pixels[index + 0], transparentColor[0], margin) &&
+        around(pixels[index + 1], transparentColor[1], margin) &&
+        around(pixels[index + 2], transparentColor[2], margin)
+      ) {
+        pixels[index + 0] = fixedColor[0];
+        pixels[index + 1] = fixedColor[1];
+        pixels[index + 2] = fixedColor[2];
+        pixels[index + 3] = fixedColor[3];
+      }
+    } while (looper >= 0);
   }
 
   function setFixedColor(color) {
-    console.log('setFixedColor', color);
+    transparentColor = color;
+    calculateAlphaChannel(canvasData);
   }
 
-  function init() {
+  function getImageData() {
+    const loadCanvas = document.createElement('canvas');
+    loadCanvas.width = width;
+    loadCanvas.height = height;
+    const context = loadCanvas.getContext('2d');
+    context.drawImage(image, 0, 0);
+    return context.getImageData(0, 0, width, height);
+  }
+
+  function noSmoothing(context) {
+    context.globalAlpha = 1;
+    context.imageSmoothingEnabled = false;
+    context.mozImageSmoothingEnabled = false;
+    context.webkitImageSmoothingEnabled = false;
+    context.msImageSmoothingEnabled = false;
+  }
+
+  function initScratchCanvas() {
+    scratchCanvas = document.createElement('canvas');
+    scratchCanvas.width = width;
+    scratchCanvas.height = height;
+    scratchContext = scratchCanvas.getContext('2d');
+    noSmoothing(scratchContext);
+  }
+
+  function initVisibleCanvas() {
     canvas.width = width;
     canvas.height = height;
 
     canvas.style.width = `${width / window.devicePixelRatio}px`;
     canvas.style.height = `${height / window.devicePixelRatio}px`;
     ctx = canvas.getContext('2d');
-    ctx.globalAlpha = 1;
-    ctx.imageSmoothingEnabled = false;
-    ctx.mozImageSmoothingEnabled = false;
-    ctx.webkitImageSmoothingEnabled = false;
-    ctx.msImageSmoothingEnabled = false;
+    noSmoothing(ctx);
+  }
 
-    ctx.drawImage(image, 0, 0);
-    canvasData = ctx.getImageData(0, 0, width, height);
+  function init() {
+    initScratchCanvas();
+    initVisibleCanvas();
+
+    canvasData = getImageData();
     pixelsLength = canvasData.data.length;
+    calculateAlphaChannel(canvasData);
     startIndex = (pixelsLength >> 2) - 1;
     initBB();
+    draw();
   }
 
   function getContext() {
