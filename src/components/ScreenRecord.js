@@ -55,15 +55,19 @@ export default class ScreenRecord extends Component {
       return (<button>rendering...</button>);
     }
     return this.props.recording ?
-      (<button onClick={this.props.stopRecording.bind(this)}>■</button>) :
-      (<button onClick={this.props.startRecording.bind(this)}>●</button>);
+      <button onClick={this.props.stopRecording.bind(this)}>■</button> :
+      this.props.playing ?
+        null :
+        <button onClick={this.props.startRecording.bind(this)}>●</button>;
   }
 
   playPauseButton() {
     if (this.props.recording) return null;
     return this.props.playing ?
-      (<button onClick={this.props.pauseAnimation.bind(this)}>‖</button>) :
-      (<button onClick={this.props.playAnimation.bind(this)}>▶</button>);
+      <button onClick={this.props.pauseAnimation.bind(this)}>‖</button> :
+      this.props.rendering ?
+        null :
+        <button onClick={this.props.playAnimation.bind(this)}>▶</button>;
   }
 
   previewImage() {
@@ -88,6 +92,11 @@ export default class ScreenRecord extends Component {
     );
   }
 
+  colorPicker() {
+    if (this.props.rendering || this.props.playing) return null;
+    return <ColorPicker canvasSelector={'.faller'} onPick={this.props.setColor.bind(this)} />
+  }
+
   render() {
     return (
       <div>
@@ -102,7 +111,7 @@ export default class ScreenRecord extends Component {
         {this.playPauseButton()}
         {this.recordingButton()}
         {this.loadingButtons()}
-        <ColorPicker canvasSelector={'.faller'} onPick={this.props.setColor.bind(this)} />
+        {this.colorPicker()}
         {this.previewImage()}
       </div>
     );
