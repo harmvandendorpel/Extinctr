@@ -1,6 +1,6 @@
 import GIF from 'gif.js.optimized';
 
-export default function createRecorder({ workers = 5, quality = 10, delay = 50 }) {
+export default function createRecorder(canvas, { workers = 5, quality = 10, delay = 50 }) {
   const gif = new GIF({
     workers,
     quality,
@@ -8,7 +8,7 @@ export default function createRecorder({ workers = 5, quality = 10, delay = 50 }
     background: '#ffffff'
   });
 
-  function addFrame(canvas) {
+  function addFrame() {
     gif.addFrame(canvas, {
       delay,
       copy: true
@@ -22,8 +22,13 @@ export default function createRecorder({ workers = 5, quality = 10, delay = 50 }
     });
   }
 
+  function destroy() {
+    // ...
+  }
+
   return {
     addFrame,
-    save
+    save,
+    destroy,
   };
 }

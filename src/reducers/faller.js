@@ -12,7 +12,9 @@ const initState = {
   loaded: false,
   playing: false,
   image: null,
-  filename: null
+  filename: null,
+  scatter: 0.1,
+  transparentColor: [255, 255, 255, 255]
 };
 
 export default function faller(state = initState, action) {

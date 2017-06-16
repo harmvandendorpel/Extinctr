@@ -1,4 +1,4 @@
-export default function createFaller(canvas, image, scatter = 0) {
+export default function createFaller(canvas, { image, transparentColor, scatter }) {
   const RANDOM_NUMBERS_COUNT = 2048;
   const randomNumbers = Array(RANDOM_NUMBERS_COUNT).fill(0).map(() => (Math.random() * 255 << 0));
   const width = image.width;
@@ -16,7 +16,6 @@ export default function createFaller(canvas, image, scatter = 0) {
   let randomIndex = 0;
   let pixelsLength = null;
   let flip = true;
-  let transparentColor = [255, 255, 255, 255];
   const fixedColor = [255, 255, 255, 0];
 
   let left = null;
@@ -72,6 +71,13 @@ export default function createFaller(canvas, image, scatter = 0) {
 
     left = newLeft;
     right = newRight;
+  }
+
+  function draw() {
+    ctx.fillStyle = `rgba(${transparentColor[0]},${transparentColor[1]},${transparentColor[2]},${transparentColor[3]})`;
+    ctx.fillRect(0, 0, width, height);
+    scratchContext.putImageData(canvasData, 0, 0);
+    ctx.drawImage(scratchCanvas, 0, 0);
   }
 
   function update() {
@@ -160,13 +166,6 @@ export default function createFaller(canvas, image, scatter = 0) {
     draw();
   }
 
-  function draw() {
-    ctx.fillStyle = `rgba(${transparentColor[0]},${transparentColor[1]},${transparentColor[2]},${transparentColor[3]})`;
-    ctx.fillRect(0, 0, width, height);
-    scratchContext.putImageData(canvasData, 0, 0);
-    ctx.drawImage(scratchCanvas, 0, 0);
-  }
-
   function around(n, m, margin) {
     return (n > m - margin && n < m + margin );
   }
@@ -190,11 +189,6 @@ export default function createFaller(canvas, image, scatter = 0) {
         pixels[index + 3] = fixedColor[3];
       }
     } while (looper >= 0);
-  }
-
-  function setFixedColor(color) {
-    transparentColor = color;
-    calculateAlphaChannel(canvasData);
   }
 
   function getImageData() {
@@ -248,10 +242,14 @@ export default function createFaller(canvas, image, scatter = 0) {
     return ctx;
   }
 
+  function destroy() {
+    // ....
+  }
+
+  init();
   return {
-    init,
     update,
     getContext,
-    setFixedColor
+    destroy
   };
 }

@@ -3,7 +3,8 @@ import {
   PAUSE,
   IMAGE_LOADING,
   IMAGE_LOADED,
-  IMAGE_UNLOAD
+  IMAGE_UNLOAD,
+  IMAGE_CANVAS_READY
 } from '../constants/ActionTypes';
 
 import { loadImage } from '../helpers/load';
@@ -45,7 +46,7 @@ export function imageRequest(filename) {
     dispatch(imageLoading());
     loadImage(filename, { maxWidth: 1024, maxHeight: 1024 })
       .then(image => dispatch(imageLoaded({ image, filename })))
-      .catch((error) => alert(error));
+      .catch(error => alert(error));
   };
 }
 
@@ -54,5 +55,12 @@ export function resetImage() {
     const filename = getState().faller.filename;
     dispatch(unloadImage());
     dispatch(imageRequest(filename));
+  };
+}
+
+export function onCanvasReady(canvas) {
+  return {
+    type: IMAGE_CANVAS_READY,
+    canvas
   };
 }

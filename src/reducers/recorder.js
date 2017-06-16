@@ -1,7 +1,6 @@
 import {
   RECORDING_START,
   RECORDING_STOP,
-  RECORDING_ADD_FRAME,
   RECORDING_RENDERING,
   RECORDING_DONE
 } from '../constants/ActionTypes';
@@ -20,11 +19,6 @@ export default function recorderReducer(state = initState, action) {
         recording: true,
         rendering: false,
         blobURL: null
-      };
-
-    case RECORDING_ADD_FRAME:
-      return {
-        ...state
       };
 
     case RECORDING_STOP:

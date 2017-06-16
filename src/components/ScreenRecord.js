@@ -18,9 +18,9 @@ import * as ColorPickerActions from '../actions/ColorPickerActions';
     fixedColor: state.colorpicker.color
   }),
   {
+    onCanvasReady: FallerActions.onCanvasReady,
     stopRecording: RecorderActions.stop,
     startRecording: RecorderActions.start,
-    addFrame: RecorderActions.addFrame,
     pauseAnimation: FallerActions.pause,
     playAnimation: FallerActions.play,
     resetImage: FallerActions.resetImage,
@@ -37,13 +37,13 @@ export default class ScreenRecord extends Component {
     rendering: PropTypes.bool.isRequired,
     stopRecording: PropTypes.func.isRequired,
     startRecording: PropTypes.func.isRequired,
-    addFrame: PropTypes.func.isRequired,
     pauseAnimation: PropTypes.func.isRequired,
     playAnimation: PropTypes.func.isRequired,
     resetImage: PropTypes.func.isRequired,
     unloadImage: PropTypes.func.isRequired,
     setColor: PropTypes.func.isRequired,
-    fixedColor: PropTypes.arrayOf(PropTypes.number).isRequired
+    fixedColor: PropTypes.arrayOf(PropTypes.number).isRequired,
+    onCanvasReady: PropTypes.func.isRequired
   };
 
   static defaultProps = {
@@ -101,12 +101,7 @@ export default class ScreenRecord extends Component {
     return (
       <div>
         <CollapsrCanvas
-          scatter={6}
-          image={this.props.image}
-          playing={this.props.playing}
-          recording={this.props.recording}
-          addFrame={this.props.addFrame}
-          fixedColor={this.props.fixedColor}
+          onCanvasReady={this.props.onCanvasReady}
         />
         {this.playPauseButton()}
         {this.recordingButton()}
