@@ -6,7 +6,6 @@ import ColorPicker from './ColorPicker';
 import './CollapsrCanvas.scss';
 import * as FallerActions from '../actions/FallerActions';
 import * as RecorderActions from '../actions/RecorderActions';
-import * as ColorPickerActions from '../actions/ColorPickerActions';
 
 @connect(
   state => ({
@@ -15,7 +14,7 @@ import * as ColorPickerActions from '../actions/ColorPickerActions';
     recording: state.recorder.recording,
     blobURL: state.recorder.blobURL,
     rendering: state.recorder.rendering,
-    fixedColor: state.colorpicker.color
+    transparentColor: state.faller.transparentColor
   }),
   {
     onCanvasReady: FallerActions.onCanvasReady,
@@ -25,7 +24,7 @@ import * as ColorPickerActions from '../actions/ColorPickerActions';
     playAnimation: FallerActions.play,
     resetImage: FallerActions.resetImage,
     unloadImage: FallerActions.unloadImage,
-    setColor: ColorPickerActions.setColor
+    setTransparentColor: FallerActions.setTransparentColor
   }
 )
 export default class ScreenRecord extends Component {
@@ -41,8 +40,8 @@ export default class ScreenRecord extends Component {
     playAnimation: PropTypes.func.isRequired,
     resetImage: PropTypes.func.isRequired,
     unloadImage: PropTypes.func.isRequired,
-    setColor: PropTypes.func.isRequired,
-    fixedColor: PropTypes.arrayOf(PropTypes.number).isRequired,
+    setTransparentColor: PropTypes.func.isRequired,
+    transparentColor: PropTypes.arrayOf(PropTypes.number).isRequired,
     onCanvasReady: PropTypes.func.isRequired
   };
 
@@ -94,7 +93,13 @@ export default class ScreenRecord extends Component {
 
   colorPicker() {
     if (this.props.rendering || this.props.playing) return null;
-    return <ColorPicker canvasSelector={'.faller'} onPick={this.props.setColor.bind(this)} />
+    return (
+      <ColorPicker
+        color={this.props.transparentColor}
+        canvasSelector={'.faller'}
+        onPick={this.props.setTransparentColor.bind(this)}
+      />
+    );
   }
 
   render() {

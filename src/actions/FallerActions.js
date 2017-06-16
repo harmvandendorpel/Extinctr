@@ -4,7 +4,8 @@ import {
   IMAGE_LOADING,
   IMAGE_LOADED,
   IMAGE_UNLOAD,
-  IMAGE_CANVAS_READY
+  IMAGE_CANVAS_READY,
+  SET_TRANSPARENT_COLOR
 } from '../constants/ActionTypes';
 
 import { loadImage } from '../helpers/load';
@@ -62,5 +63,12 @@ export function onCanvasReady(canvas) {
   return {
     type: IMAGE_CANVAS_READY,
     canvas
+  };
+}
+
+export function setTransparentColor(color) {
+  return {
+    type: SET_TRANSPARENT_COLOR,
+    color
   };
 }

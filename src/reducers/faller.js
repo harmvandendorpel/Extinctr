@@ -4,7 +4,7 @@ import {
   IMAGE_LOADING,
   IMAGE_LOADED,
   IMAGE_UNLOAD,
-  IMAGE_REQUEST
+  SET_TRANSPARENT_COLOR
 } from '../constants/ActionTypes';
 
 const initState = {
@@ -48,6 +48,12 @@ export default function faller(state = initState, action) {
         playing: false,
         image: null,
         filename: null
+      };
+
+    case SET_TRANSPARENT_COLOR:
+      return {
+        ...state,
+        transparentColor: action.color
       };
 
     default:

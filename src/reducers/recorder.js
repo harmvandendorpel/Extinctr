@@ -2,7 +2,8 @@ import {
   RECORDING_START,
   RECORDING_STOP,
   RECORDING_RENDERING,
-  RECORDING_DONE
+  RECORDING_DONE,
+  IMAGE_UNLOAD
 } from '../constants/ActionTypes';
 
 const initState = {
@@ -38,6 +39,12 @@ export default function recorderReducer(state = initState, action) {
         ...state,
         rendering: false,
         blobURL: action.blobURL
+      };
+
+    case IMAGE_UNLOAD:
+      return {
+        ...state,
+        blobURL: null
       };
 
     default:

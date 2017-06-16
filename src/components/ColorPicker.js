@@ -2,20 +2,20 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import './ColorPicker.scss';
 
-const initialState = {
-  sampling: false,
-  current: [255,255,255,255]
-};
-
 export default class ColorPicker extends Component {
   static propTypes = {
     canvasSelector: PropTypes.string.isRequired,
+    color: PropTypes.arrayOf(PropTypes.number).isRequired,
     onPick: PropTypes.func.isRequired
   };
 
   constructor(props, context) {
     super(props, context);
-    this.state = initialState;
+    this.state = {
+      sampling: false,
+      current: this.props.color
+    };
+    console.log(this.state);
   }
 
   componentDidMount() {
@@ -66,8 +66,8 @@ export default class ColorPicker extends Component {
   }
 
   cssColor() {
-    if (!this.state.current) return;
-    const c = this.state.current;
+    if (!this.props.color) return 'red';
+    const c = this.props.color;
     return `rgba(${c[0]},${c[1]},${c[2]},${c[3]})`;
   }
 
