@@ -40,13 +40,6 @@ function initFaller(store) {
   faller = createFaller(
     canvas, settings
   );
-
-  if (recorder) recorder.destroy();
-  const backgroundColor = toHex(transparentColor);
-
-  recorder = createRecorder(canvas, {
-    backgroundColor
-  });
 }
 
 const fallerMiddleware = store => next => (action) => {
@@ -71,6 +64,10 @@ const fallerMiddleware = store => next => (action) => {
       break;
 
     case RECORDING_START:
+      if (recorder) recorder.destroy();
+      recorder = createRecorder(canvas, {
+        backgroundColor: toHex(transparentColor)
+      });
       recording = true;
       break;
 
@@ -78,6 +75,7 @@ const fallerMiddleware = store => next => (action) => {
       recording = false;
       recorder.save().then((blobURL) => {
         store.dispatch({ type: RECORDING_DONE, blobURL });
+        window.open(blobURL);
       });
       break;
 

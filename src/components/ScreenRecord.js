@@ -114,7 +114,7 @@ export default class ScreenRecord extends Component {
         {this.recordingButton()}
         {this.loadingButtons()}
         {this.colorPicker()}
-        {this.previewImage()}
+        {/* {this.previewImage()} */}
       </div>
     );
   }
