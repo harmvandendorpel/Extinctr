@@ -1,3 +1,5 @@
+import { arrayToRGB, around } from '../helpers/colors';
+
 export default function createFaller(canvas, { image, transparentColor, scatter }) {
   const RANDOM_NUMBERS_COUNT = 2048;
   const randomNumbers = Array(RANDOM_NUMBERS_COUNT).fill(0).map(() => (Math.random() * 255 << 0));
@@ -69,7 +71,7 @@ export default function createFaller(canvas, { image, transparentColor, scatter 
   }
 
   function draw() {
-    ctx.fillStyle = `rgba(${transparentColor[0]},${transparentColor[1]},${transparentColor[2]},${transparentColor[3]})`;
+    ctx.fillStyle = arrayToRGB(transparentColor);
     ctx.fillRect(0, 0, width, height);
     scratchContext.putImageData(canvasData, 0, 0);
     ctx.drawImage(scratchCanvas, 0, 0);
@@ -160,11 +162,6 @@ export default function createFaller(canvas, { image, transparentColor, scatter 
 
     draw();
   }
-
-  function around(n, m, margin) {
-    return (n > m - margin && n < m + margin);
-  }
-
   function calculateAlphaChannel(data) {
     const pixels = data.data;
     const margin = 3;
