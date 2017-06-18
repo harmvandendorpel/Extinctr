@@ -25,10 +25,10 @@ let transparentColor = null;
 function update() {
   window.requestAnimationFrame(update);
   if (!playing) return;
-  faller.update();
   if (recording) {
     recorder.addFrame();
   }
+  faller.update();
 }
 
 function initFaller(store) {
