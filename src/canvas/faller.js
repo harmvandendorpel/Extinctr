@@ -167,7 +167,7 @@ export default function createFaller(canvas, { image, transparentColor, scatter 
   }
 
   function around(n, m, margin) {
-    return (n > m - margin && n < m + margin );
+    return (n > m - margin && n < m + margin);
   }
 
   function calculateAlphaChannel(data) {

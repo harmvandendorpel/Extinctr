@@ -60,7 +60,6 @@ export default class ColorPicker extends Component {
   }
 
   startSampling() {
-    console.log('start sampling color');
     this.setState({
       sampling: true
     });
