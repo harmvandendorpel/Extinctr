@@ -7,6 +7,7 @@ import {
   SET_TRANSPARENT_COLOR
 } from '../constants/ActionTypes';
 
+const initTransparentColor = [255, 255, 255, 255];
 const initState = {
   loading: false,
   loaded: false,
@@ -14,7 +15,7 @@ const initState = {
   image: null,
   filename: null,
   scatter: 0.1,
-  transparentColor: [255, 255, 255, 255]
+  transparentColor: initTransparentColor
 };
 
 export default function faller(state = initState, action) {
@@ -38,7 +39,8 @@ export default function faller(state = initState, action) {
         loading: false,
         playing: false,
         image: action.image,
-        filename: action.filename
+        filename: action.filename,
+        transparentColor: initTransparentColor
       };
 
     case IMAGE_UNLOAD:
