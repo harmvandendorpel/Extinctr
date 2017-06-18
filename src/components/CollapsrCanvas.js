@@ -1,11 +1,18 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-const CollapsrCanvas = ({ onCanvasReady }) =>
-  <canvas className={'faller'} ref={canvas => onCanvasReady(canvas)} />;
+export default class CollapsrCanvas extends Component {
+  static propTypes = {
+    onCanvasReady: PropTypes.func.isRequired
+  };
 
-CollapsrCanvas.propTypes = {
-  onCanvasReady: PropTypes.func.isRequired
-};
+  componentDidMount() {
+    this.props.onCanvasReady(this.canvas);
+  }
 
-export default CollapsrCanvas;
+  render() {
+    return (
+      <canvas className={'faller'} ref={(canvas) => { this.canvas = canvas; }} />
+    );
+  }
+}
