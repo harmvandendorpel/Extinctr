@@ -16,8 +16,6 @@ export default function createFaller(canvas, { image, transparentColor, scatter 
   let randomIndex = 0;
   let pixelsLength = null;
   let flip = true;
-  const fixedColor = [255, 255, 255, 0];
-
   let left = null;
   let right = null;
 
@@ -30,17 +28,14 @@ export default function createFaller(canvas, { image, transparentColor, scatter 
     data[index + 3] = color[3];
   }
 
-  function setReturnPixel(data, index, color) {
+  function getValueSetFixed(data, index) {
     const previousColor = [
       data[index],
       data[index + 1],
       data[index + 2],
       data[index + 3]
     ];
-    data[index] = color[0];
-    data[index + 1] = color[1];
-    data[index + 2] = color[2];
-    data[index + 3] = color[3];
+    data[index + 3] = 0;
     return previousColor;
   }
 
@@ -132,7 +127,7 @@ export default function createFaller(canvas, { image, transparentColor, scatter 
         setPixel(
           pixels,
           beneathIndex,
-          setReturnPixel(pixels, index, fixedColor)
+          getValueSetFixed(pixels, index)
         );
         continue;
       }
@@ -155,7 +150,7 @@ export default function createFaller(canvas, { image, transparentColor, scatter 
       setPixel(
         pixels,
         beneathIndex + offset,
-        setReturnPixel(pixels, index, fixedColor)
+        getValueSetFixed(pixels, index)
       );
     } while (looper > minLooper);
 
@@ -179,14 +174,11 @@ export default function createFaller(canvas, { image, transparentColor, scatter 
       const i = looper--;
       const index = i * 4;
       if (
-        around(pixels[index + 0], transparentColor[0], margin) &&
+        around(pixels[index], transparentColor[0], margin) &&
         around(pixels[index + 1], transparentColor[1], margin) &&
         around(pixels[index + 2], transparentColor[2], margin)
       ) {
-        pixels[index + 0] = fixedColor[0];
-        pixels[index + 1] = fixedColor[1];
-        pixels[index + 2] = fixedColor[2];
-        pixels[index + 3] = fixedColor[3];
+        pixels[index + 3] = 0;
       }
     } while (looper >= 0);
   }
