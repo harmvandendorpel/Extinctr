@@ -1,11 +1,13 @@
 import GIF from 'gif.js.optimized';
 
-export default function createRecorder(canvas, { workers = 5, quality = 10, delay = 50 }) {
+export default function createRecorder(canvas, {
+  backgroundColor, workers = 5, quality = 10, delay = 50
+}) {
   const gif = new GIF({
     workers,
     quality,
     debug: true,
-    background: '#ffffff'
+    background: backgroundColor
   });
 
   function addFrame() {

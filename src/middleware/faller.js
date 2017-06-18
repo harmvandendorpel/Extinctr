@@ -31,6 +31,15 @@ function update() {
   }
 }
 
+function componentToHex(c) {
+  const hex = c.toString(16);
+  return hex.length === 1 ? '0' + hex : hex;
+}
+
+function toHex(c) {
+  return `#${componentToHex(c[0])}${componentToHex(c[1])}${componentToHex(c[2])}`;
+}
+
 function initFaller(store) {
   if (!image || !canvas) return;
   const settings = { ...store.getState().faller, image };
@@ -42,7 +51,11 @@ function initFaller(store) {
   );
 
   if (recorder) recorder.destroy();
-  recorder = createRecorder(canvas, {});
+  const backgroundColor = toHex(transparentColor);
+  console.log(backgroundColor);
+  recorder = createRecorder(canvas, {
+    backgroundColor
+  });
 }
 
 const fallerMiddleware = store => next => (action) => {
