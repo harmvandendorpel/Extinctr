@@ -1,3 +1,5 @@
+import isEqual from 'lodash.isequal';
+
 import {
   IMAGE_CANVAS_READY,
   PLAY,
@@ -5,7 +7,8 @@ import {
   RECORDING_START,
   RECORDING_STOP,
   IMAGE_LOADED,
-  RECORDING_DONE
+  RECORDING_DONE,
+  SET_TRANSPARENT_COLOR
 } from '../constants/ActionTypes';
 import createFaller from '../canvas/faller';
 import createRecorder from '../canvas/recorder';
@@ -15,8 +18,9 @@ let faller = null;
 let canvas = null;
 let image = null;
 
-let playing = false; // these are copies of the store for increased performance
+let playing = false;
 let recording = false;
+let transparentColor = null;
 
 function update() {
   window.requestAnimationFrame(update);
@@ -31,6 +35,7 @@ function initFaller(store) {
   if (!image || !canvas) return;
   const settings = { ...store.getState().faller, image };
 
+  transparentColor = settings.transparentColor;
   if (faller) faller.destroy();
   faller = createFaller(
     canvas, settings
@@ -70,6 +75,12 @@ const fallerMiddleware = store => next => (action) => {
       recorder.save().then((blobURL) => {
         store.dispatch({ type: RECORDING_DONE, blobURL });
       });
+      break;
+
+    case SET_TRANSPARENT_COLOR:
+      if (!isEqual(store.getState().faller.transparentColor, transparentColor)) {
+        initFaller(store);
+      }
       break;
 
     default:
