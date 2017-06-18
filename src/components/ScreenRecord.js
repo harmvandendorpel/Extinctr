@@ -98,6 +98,8 @@ export default class ScreenRecord extends Component {
         color={this.props.transparentColor}
         canvasSelector={'.faller'}
         onPick={this.props.setTransparentColor.bind(this)}
+        width={this.props.image.width}
+        height={this.props.image.height}
       />
     );
   }
