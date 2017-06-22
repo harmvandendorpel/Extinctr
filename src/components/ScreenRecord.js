@@ -131,8 +131,8 @@ export default class ScreenRecord extends Component {
           <Rheostat
             onValuesUpdated={this.props.changeScatter.bind(this)}
             min={0}
-            max={10}
-            values={[this.props.scatter]}
+            max={100}
+            values={[this.props.scatter * 100]}
           />
         </label>
       </div>

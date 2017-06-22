@@ -77,6 +77,6 @@ export function setTransparentColor(color) {
 export function changeScatter(sliderInfo) {
   return {
     type: SET_SCATTER,
-    scatter: sliderInfo.values[0]
+    scatter: sliderInfo.values[0] / 100
   };
 }
