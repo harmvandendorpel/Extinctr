@@ -8,7 +8,8 @@ import {
   RECORDING_STOP,
   IMAGE_LOADED,
   RECORDING_DONE,
-  SET_TRANSPARENT_COLOR
+  SET_TRANSPARENT_COLOR,
+  SET_SCATTER
 } from '../constants/ActionTypes';
 import createFaller from '../canvas/faller';
 import createRecorder from '../canvas/recorder';
@@ -83,6 +84,10 @@ const fallerMiddleware = store => next => (action) => {
       if (!isEqual(store.getState().faller.transparentColor, transparentColor)) {
         initFaller(store);
       }
+      break;
+
+    case SET_SCATTER:
+      faller.setScatter(action.scatter);
       break;
 
     default:

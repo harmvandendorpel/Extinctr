@@ -1,10 +1,9 @@
 import { arrayToRGB, around } from '../helpers/colors';
 
 export default function createFaller(canvas, { image, transparentColor, scatter }) {
-  console.log(scatter);
   const RANDOM_NUMBERS_COUNT = 2048;
   const randomNumbers = Array(RANDOM_NUMBERS_COUNT).fill(0).map(() => (Math.random() * 255 << 0));
-  const scatter255 = scatter * 255;
+  let scatter255 = scatter * 255;
   const width = image.width;
   const height = image.height;
   const invWidth = 1 / width;
@@ -237,10 +236,15 @@ export default function createFaller(canvas, { image, transparentColor, scatter 
     // ....
   }
 
+  function setScatter(newScatter) {
+    scatter255 = newScatter * 255;
+  }
+
   init();
   return {
     update,
     getContext,
-    destroy
+    destroy,
+    setScatter
   };
 }

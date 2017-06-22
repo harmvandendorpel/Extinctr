@@ -127,11 +127,11 @@ export default class ScreenRecord extends Component {
         {this.recordingButton()}
         {this.options()}
         <label>
-          Noise
+          scatter {this.props.scatter * 100 << 0}%
           <Rheostat
             onValuesUpdated={this.props.changeScatter.bind(this)}
             min={0}
-            max={100}
+            max={95}
             values={[this.props.scatter * 100]}
           />
         </label>
