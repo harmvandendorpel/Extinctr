@@ -5,7 +5,8 @@ import {
   IMAGE_LOADED,
   IMAGE_UNLOAD,
   IMAGE_CANVAS_READY,
-  SET_TRANSPARENT_COLOR
+  SET_TRANSPARENT_COLOR,
+  SET_SCATTER
 } from '../constants/ActionTypes';
 
 import { loadImage } from '../helpers/load';
@@ -70,5 +71,12 @@ export function setTransparentColor(color) {
   return {
     type: SET_TRANSPARENT_COLOR,
     color
+  };
+}
+
+export function changeScatter(sliderInfo) {
+  return {
+    type: SET_SCATTER,
+    scatter: sliderInfo.values[0]
   };
 }

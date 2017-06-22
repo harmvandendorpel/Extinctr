@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import Rheostat from 'rheostat';
 import CollapsrCanvas from './CollapsrCanvas';
 import ColorPicker from './ColorPicker';
 import './CollapsrCanvas.scss';
@@ -14,7 +15,8 @@ import * as RecorderActions from '../actions/RecorderActions';
     recording: state.recorder.recording,
     blobURL: state.recorder.blobURL,
     rendering: state.recorder.rendering,
-    transparentColor: state.faller.transparentColor
+    transparentColor: state.faller.transparentColor,
+    scatter: state.faller.scatter
   }),
   {
     onCanvasReady: FallerActions.onCanvasReady,
@@ -24,6 +26,7 @@ import * as RecorderActions from '../actions/RecorderActions';
     playAnimation: FallerActions.play,
     resetImage: FallerActions.resetImage,
     unloadImage: FallerActions.unloadImage,
+    changeScatter: FallerActions.changeScatter,
     setTransparentColor: FallerActions.setTransparentColor
   }
 )
@@ -42,7 +45,9 @@ export default class ScreenRecord extends Component {
     unloadImage: PropTypes.func.isRequired,
     setTransparentColor: PropTypes.func.isRequired,
     transparentColor: PropTypes.arrayOf(PropTypes.number).isRequired,
-    onCanvasReady: PropTypes.func.isRequired
+    onCanvasReady: PropTypes.func.isRequired,
+    changeScatter: PropTypes.func.isRequired,
+    scatter: PropTypes.number.isRequired
   };
 
   static defaultProps = {
@@ -82,7 +87,6 @@ export default class ScreenRecord extends Component {
   }
 
   loadingButtons() {
-    if (this.props.rendering || this.props.playing) return null;
     return (
       <span>
         <button onClick={this.props.resetImage.bind(this)}>reset</button>
@@ -92,7 +96,6 @@ export default class ScreenRecord extends Component {
   }
 
   colorPicker() {
-    if (this.props.rendering || this.props.playing) return null;
     return (
       <ColorPicker
         color={this.props.transparentColor}
@@ -104,6 +107,16 @@ export default class ScreenRecord extends Component {
     );
   }
 
+  options() {
+    if (this.props.rendering || this.props.playing) return null;
+    return (
+      <div>
+        {this.loadingButtons()}
+        {this.colorPicker()}
+      </div>
+    );
+  }
+
   render() {
     return (
       <div>
@@ -112,9 +125,16 @@ export default class ScreenRecord extends Component {
         />
         {this.playPauseButton()}
         {this.recordingButton()}
-        {this.loadingButtons()}
-        {this.colorPicker()}
-        {/* {this.previewImage()} */}
+        {this.options()}
+        <label>
+          Noise
+          <Rheostat
+            onValuesUpdated={this.props.changeScatter.bind(this)}
+            min={0}
+            max={10}
+            values={[this.props.scatter]}
+          />
+        </label>
       </div>
     );
   }

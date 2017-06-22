@@ -164,7 +164,7 @@ export default function createFaller(canvas, { image, transparentColor, scatter 
   }
   function calculateAlphaChannel(data) {
     const pixels = data.data;
-    const margin = 3;
+    const margin = 8;
     let looper = pixels.length / 4;
 
     do {

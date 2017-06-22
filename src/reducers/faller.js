@@ -4,7 +4,8 @@ import {
   IMAGE_LOADING,
   IMAGE_LOADED,
   IMAGE_UNLOAD,
-  SET_TRANSPARENT_COLOR
+  SET_TRANSPARENT_COLOR,
+  SET_SCATTER
 } from '../constants/ActionTypes';
 
 const initTransparentColor = [255, 255, 255, 255];
@@ -56,6 +57,12 @@ export default function faller(state = initState, action) {
       return {
         ...state,
         transparentColor: action.color
+      };
+
+    case SET_SCATTER:
+      return {
+        ...state,
+        scatter: action.scatter
       };
 
     default:
