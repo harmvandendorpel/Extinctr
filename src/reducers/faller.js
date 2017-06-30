@@ -41,7 +41,6 @@ export default function faller(state = initState, action) {
         playing: false,
         image: action.image,
         filename: action.filename,
-        transparentColor: initTransparentColor
       };
 
     case IMAGE_UNLOAD:
@@ -50,7 +49,8 @@ export default function faller(state = initState, action) {
         loaded: false,
         playing: false,
         image: null,
-        filename: null
+        filename: null,
+        transparentColor: initTransparentColor
       };
 
     case SET_TRANSPARENT_COLOR:

@@ -1,13 +1,14 @@
 import { arrayToRGB, around } from '../helpers/colors';
+import { getImageData, noSmoothing } from '../helpers/canvas';
+import random from '../helpers/random';
 
 export default function createFaller(canvas, { image, transparentColor, scatter }) {
-  const RANDOM_NUMBERS_COUNT = 2048;
-  const randomNumbers = Array(RANDOM_NUMBERS_COUNT).fill(0).map(() => (Math.random() * 255 << 0));
   let scatter255 = scatter * 255;
   const width = image.width;
   const height = image.height;
   const invWidth = 1 / width;
   const widthx4 = width << 2;
+  const transparentColorRGB = arrayToRGB(transparentColor);
 
   let canvasData;
   let ctx;
@@ -16,7 +17,6 @@ export default function createFaller(canvas, { image, transparentColor, scatter 
   let scratchContext;
 
   let startIndex = null;
-  let randomIndex = 0;
   let pixelsLength = null;
   let flip = true;
   let left = null;
@@ -40,12 +40,6 @@ export default function createFaller(canvas, { image, transparentColor, scatter 
     ];
     data[index + 3] = 0;
     return previousColor;
-  }
-
-  function random() {
-    randomIndex++;
-    if (randomIndex > RANDOM_NUMBERS_COUNT) randomIndex = 0;
-    return randomNumbers[randomIndex];
   }
 
   function initBB() {
@@ -72,7 +66,7 @@ export default function createFaller(canvas, { image, transparentColor, scatter 
   }
 
   function draw() {
-    ctx.fillStyle = arrayToRGB(transparentColor);
+    ctx.fillStyle = transparentColorRGB;
     ctx.fillRect(0, 0, width, height);
     scratchContext.putImageData(canvasData, 0, 0);
     ctx.drawImage(scratchCanvas, 0, 0);
@@ -181,23 +175,6 @@ export default function createFaller(canvas, { image, transparentColor, scatter 
     } while (looper >= 0);
   }
 
-  function getImageData() {
-    const loadCanvas = document.createElement('canvas');
-    loadCanvas.width = width;
-    loadCanvas.height = height;
-    const context = loadCanvas.getContext('2d');
-    context.drawImage(image, 0, 0);
-    return context.getImageData(0, 0, width, height);
-  }
-
-  function noSmoothing(context) {
-    context.globalAlpha = 1;
-    context.imageSmoothingEnabled = false;
-    context.mozImageSmoothingEnabled = false;
-    context.webkitImageSmoothingEnabled = false;
-    context.msImageSmoothingEnabled = false;
-  }
-
   function initScratchCanvas() {
     scratchCanvas = document.createElement('canvas');
     scratchCanvas.width = width;
@@ -220,7 +197,7 @@ export default function createFaller(canvas, { image, transparentColor, scatter 
     initScratchCanvas();
     initVisibleCanvas();
 
-    canvasData = getImageData();
+    canvasData = getImageData(width, height, image);
     pixelsLength = canvasData.data.length;
     calculateAlphaChannel(canvasData);
     startIndex = (pixelsLength >> 2) - 1;
