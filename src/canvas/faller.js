@@ -41,8 +41,8 @@ export default function createFaller(canvas, { image, transparentColor, scatter 
     pixelStatusBuffer[a] = pixelStatusBuffer[b];
     pixelStatusBuffer[b] = tempStatus;
 
-    const a4 = a >> 2;
-    const b4 = b >> 2;
+    const a4 = a << 2;
+    const b4 = b << 2;
 
     const pixelColorBuffer = canvasData.data;
     const tempColor = [
@@ -74,8 +74,6 @@ export default function createFaller(canvas, { image, transparentColor, scatter 
 
     let leftOn;
     let rightOn;
-
-    console.log('minLooper = ', minLooper, ', startIndex = ', startIndex)
 
     do {
       looper--;
