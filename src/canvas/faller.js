@@ -2,14 +2,22 @@ import { arrayToRGB, around } from '../helpers/colors';
 import { getImageData, noSmoothing } from '../helpers/canvas';
 import random from '../helpers/random';
 
+const EMPTY_SPACE = 0;
+const NOT_MOVING = 1;
+const MOVING = 2;
+
+const CHANNEL_RED = 0;
+const CHANNEL_GREEN = 1;
+const CHANNEL_BLUE = 2;
+const CHANNEL_ALPHA = 3;
+
 export default function createFaller(canvas, { image, transparentColor, scatter }) {
   let scatter255 = scatter * 255;
+  const pixelStatusBuffer = [];
   const width = image.width;
   const height = image.height;
   const invWidth = 1 / width;
-  const widthx4 = width << 2;
   const transparentColorRGB = arrayToRGB(transparentColor);
-  const EMPTY_SPACE = 0;
 
   let canvasData;
   let ctx;
@@ -18,33 +26,38 @@ export default function createFaller(canvas, { image, transparentColor, scatter 
   let scratchContext;
 
   let startIndex = null;
-  let pixelsLength = null;
   let flip = true;
 
-  let firstRow = null;
-
-  function setPixel(data, index, color) {
-    data[index] = color[0];
-    data[index + 1] = color[1];
-    data[index + 2] = color[2];
-    data[index + 3] = color[3];
-  }
-
-  function getValueSetFixed(data, index) {
-    const previousColor = [
-      data[index],
-      data[index + 1],
-      data[index + 2],
-      data[index + 3]
-    ];
-    data[index + 3] = EMPTY_SPACE;
-    return previousColor;
-  }
+  let firstRow = 0;
 
   function draw() {
     ctx.fillRect(0, 0, width, height);
     scratchContext.putImageData(canvasData, 0, 0);
     ctx.drawImage(scratchCanvas, 0, 0);
+  }
+
+  function swapPixels(a, b) {
+    const tempStatus = pixelStatusBuffer[a];
+    pixelStatusBuffer[a] = pixelStatusBuffer[b];
+    pixelStatusBuffer[b] = tempStatus;
+
+    const a4 = a >> 2;
+    const b4 = b >> 2;
+
+    const pixelColorBuffer = canvasData.data;
+    const tempColor = [
+      pixelColorBuffer[a4 + CHANNEL_RED],
+      pixelColorBuffer[a4 + CHANNEL_GREEN],
+      pixelColorBuffer[a4 + CHANNEL_BLUE],
+    ];
+
+    pixelColorBuffer[a4 + CHANNEL_RED] = pixelColorBuffer[b4 + CHANNEL_RED];
+    pixelColorBuffer[a4 + CHANNEL_GREEN] = pixelColorBuffer[b4 + CHANNEL_GREEN];
+    pixelColorBuffer[a4 + CHANNEL_BLUE] = pixelColorBuffer[b4 + CHANNEL_BLUE];
+
+    pixelColorBuffer[b4 + CHANNEL_RED] = tempColor[CHANNEL_RED];
+    pixelColorBuffer[b4 + CHANNEL_GREEN] = tempColor[CHANNEL_GREEN];
+    pixelColorBuffer[b4 + CHANNEL_BLUE] = tempColor[CHANNEL_BLUE];
   }
 
   function update() {
@@ -53,15 +66,16 @@ export default function createFaller(canvas, { image, transparentColor, scatter 
 
     let y;
     let x;
-    let index;
+    let pixelStatusIndex;
     let newFirstRow;
-    let beneathIndex;
+    let pixelStatusBeneathIndex;
     let looper = startIndex;
+    let offset = null;
 
     let leftOn;
     let rightOn;
-    let offset;
-    const pixels = canvasData.data;
+
+    console.log('minLooper = ', minLooper, ', startIndex = ', startIndex)
 
     do {
       looper--;
@@ -69,46 +83,45 @@ export default function createFaller(canvas, { image, transparentColor, scatter 
       x = looper - y * width;
       if (flip) x = width - x - 1;
 
-      index = (x + y * width) << 2;
-      if (pixels[index + 3] === EMPTY_SPACE) continue;
+      pixelStatusIndex = x + y * width;
+      if (pixelStatusBuffer[pixelStatusIndex] === EMPTY_SPACE) continue;
 
       newFirstRow = y;
 
       if (random() < scatter255) continue;
-      beneathIndex = index + widthx4;
+      pixelStatusBeneathIndex = pixelStatusIndex + width;
 
       if (
-        pixels[beneathIndex + 3] === EMPTY_SPACE &&
+        pixelStatusBuffer[pixelStatusBeneathIndex] === EMPTY_SPACE &&
         y < height
       ) {
-        setPixel(
-          pixels,
-          beneathIndex,
-          getValueSetFixed(pixels, index)
-        );
+        swapPixels(pixelStatusIndex, pixelStatusBeneathIndex);
         continue;
       }
 
-      if (pixels[beneathIndex + 3] === EMPTY_SPACE) continue;
+      if (pixelStatusBuffer[pixelStatusBeneathIndex] === EMPTY_SPACE) continue;
 
-      leftOn = (x === 0) ? true : pixels[beneathIndex - 1] !== EMPTY_SPACE;
-      rightOn = (x === width - 1) ? true : pixels[beneathIndex + 7] !== EMPTY_SPACE;
+      leftOn = (x === 0) ?
+        true
+      :
+        pixelStatusBuffer[pixelStatusBeneathIndex - 1] !== EMPTY_SPACE;
+
+      rightOn = (x === width - 1) ?
+        true
+       :
+        pixelStatusBuffer[pixelStatusBeneathIndex + 1] !== EMPTY_SPACE;
 
       if (leftOn === false && rightOn === false) {
-        offset = random() > 127 ? -4 : 4;
+        offset = random() > 127 ? -1 : 1;
       } else if (leftOn === false) {
-        offset = -4;
+        offset = -1;
       } else if (rightOn === false) {
-        offset = 4;
+        offset = 1;
       } else {
         continue;
       }
 
-      setPixel(
-        pixels,
-        beneathIndex + offset,
-        getValueSetFixed(pixels, index)
-      );
+      swapPixels(pixelStatusIndex, pixelStatusBeneathIndex + offset);
     } while (looper > minLooper);
 
     firstRow = newFirstRow - 1;
@@ -116,22 +129,29 @@ export default function createFaller(canvas, { image, transparentColor, scatter 
     draw();
   }
 
-  function calculateAlphaChannel(data) {
-    const pixels = data.data;
+  function similarColor(a, b) {
     const margin = 8;
-    let looper = pixels.length / 4;
+    return (
+      around(a[CHANNEL_RED], b[CHANNEL_RED], margin) &&
+      around(a[CHANNEL_GREEN], b[CHANNEL_GREEN], margin) &&
+      around(a[CHANNEL_BLUE], b[CHANNEL_BLUE], margin)
+    );
+  }
 
-    do {
-      const i = looper--;
-      const index = i * 4;
-      if (
-        around(pixels[index], transparentColor[0], margin) &&
-        around(pixels[index + 1], transparentColor[1], margin) &&
-        around(pixels[index + 2], transparentColor[2], margin)
-      ) {
-        pixels[index + 3] = EMPTY_SPACE;
-      }
-    } while (looper >= 0);
+  function calculatePixelStatus(data) {
+    const pixels = data.data;
+    const pixelCount = canvasData.data.length >> 2;
+
+    for (let index = 0; index < pixelCount; index++) {
+      const pixelIndex = index << 2;
+      const pixelColor = pixels.slice(pixelIndex, pixelIndex + 3);
+      pixelStatusBuffer[index] =
+        similarColor(pixelColor, transparentColor)
+      ?
+        EMPTY_SPACE
+      :
+        NOT_MOVING;
+    }
   }
 
   function initScratchCanvas() {
@@ -158,9 +178,9 @@ export default function createFaller(canvas, { image, transparentColor, scatter 
     initVisibleCanvas();
 
     canvasData = getImageData(width, height, image);
-    pixelsLength = canvasData.data.length;
-    calculateAlphaChannel(canvasData);
-    startIndex = (pixelsLength >> 2) - 1;
+    calculatePixelStatus(canvasData);
+    console.log(`${pixelStatusBuffer.filter(el => el === EMPTY_SPACE).length / pixelStatusBuffer.length * 100 >> 0}% empty space in image`);
+    startIndex = (canvasData.data.length >> 2) - 1;
     draw();
   }
 
