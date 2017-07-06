@@ -49,15 +49,18 @@ export default function createFaller(canvas, { image, transparentColor, scatter 
       pixelColorBuffer[a4 + CHANNEL_RED],
       pixelColorBuffer[a4 + CHANNEL_GREEN],
       pixelColorBuffer[a4 + CHANNEL_BLUE],
+      pixelColorBuffer[a4 + CHANNEL_ALPHA],
     ];
 
     pixelColorBuffer[a4 + CHANNEL_RED] = pixelColorBuffer[b4 + CHANNEL_RED];
     pixelColorBuffer[a4 + CHANNEL_GREEN] = pixelColorBuffer[b4 + CHANNEL_GREEN];
     pixelColorBuffer[a4 + CHANNEL_BLUE] = pixelColorBuffer[b4 + CHANNEL_BLUE];
+    pixelColorBuffer[a4 + CHANNEL_ALPHA] = pixelColorBuffer[b4 + CHANNEL_ALPHA];
 
     pixelColorBuffer[b4 + CHANNEL_RED] = tempColor[CHANNEL_RED];
     pixelColorBuffer[b4 + CHANNEL_GREEN] = tempColor[CHANNEL_GREEN];
     pixelColorBuffer[b4 + CHANNEL_BLUE] = tempColor[CHANNEL_BLUE];
+    pixelColorBuffer[b4 + CHANNEL_ALPHA] = tempColor[CHANNEL_ALPHA];
   }
 
   function update() {
@@ -147,11 +150,10 @@ export default function createFaller(canvas, { image, transparentColor, scatter 
       const pixelIndex = index << 2;
       const pixelColor = pixels.slice(pixelIndex, pixelIndex + 3);
 
-      if (similarColor(pixelColor, transparentColor) || pixels[pixelIndex + CHANNEL_ALPHA] === 0) {
-        pixels[pixelIndex + CHANNEL_ALPHA] = 255;
-        pixels[pixelIndex + CHANNEL_RED] = transparentColor[CHANNEL_RED];
-        pixels[pixelIndex + CHANNEL_GREEN] = transparentColor[CHANNEL_GREEN];
-        pixels[pixelIndex + CHANNEL_BLUE] = transparentColor[CHANNEL_BLUE];
+      if (
+        similarColor(pixelColor, transparentColor) ||
+        pixels[pixelIndex + CHANNEL_ALPHA] === 0
+      ) {
         pixelStatusBuffer[index] = EMPTY_SPACE;
       } else {
         pixelStatusBuffer[index] = NOT_MOVING;
