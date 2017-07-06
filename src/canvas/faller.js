@@ -109,14 +109,17 @@ export default function createFaller(canvas, { image, transparentColor, scatter 
        :
         pixelStatusBuffer[pixelStatusBeneathIndex + 1] !== EMPTY_SPACE;
 
-      if (leftOn === false && rightOn === false) {
-        offset = random() > 127 ? -1 : 1;
-      } else if (leftOn === false) {
-        offset = -1;
-      } else if (rightOn === false) {
-        offset = 1;
-      } else {
-        continue;
+      switch (leftOn + rightOn) {
+        case 0:
+          offset = random() > 127 ? -1 : 1;
+          break;
+
+        case 1:
+          offset = !leftOn * -1 + !rightOn;
+          break;
+
+        default:
+          continue;
       }
 
       swapPixels(pixelStatusIndex, pixelStatusBeneathIndex + offset);
@@ -143,12 +146,16 @@ export default function createFaller(canvas, { image, transparentColor, scatter 
     for (let index = 0; index < pixelCount; index++) {
       const pixelIndex = index << 2;
       const pixelColor = pixels.slice(pixelIndex, pixelIndex + 3);
-      pixelStatusBuffer[index] =
-        similarColor(pixelColor, transparentColor)
-      ?
-        EMPTY_SPACE
-      :
-        NOT_MOVING;
+
+      if (similarColor(pixelColor, transparentColor) || pixels[pixelIndex + CHANNEL_ALPHA] === 0) {
+        pixels[pixelIndex + CHANNEL_ALPHA] = 255;
+        pixels[pixelIndex + CHANNEL_RED] = transparentColor[CHANNEL_RED];
+        pixels[pixelIndex + CHANNEL_GREEN] = transparentColor[CHANNEL_GREEN];
+        pixels[pixelIndex + CHANNEL_BLUE] = transparentColor[CHANNEL_BLUE];
+        pixelStatusBuffer[index] = EMPTY_SPACE;
+      } else {
+        pixelStatusBuffer[index] = NOT_MOVING;
+      }
     }
   }
 
