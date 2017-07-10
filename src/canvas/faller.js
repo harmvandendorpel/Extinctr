@@ -11,7 +11,7 @@ const CHANNEL_GREEN = 1;
 const CHANNEL_BLUE = 2;
 const CHANNEL_ALPHA = 3;
 
-export default function createFaller(canvas, { image, transparentColor, scatter }) {
+export default function createFaller(canvas, { image, interactive, transparentColor, scatter }) {
   let scatter255 = scatter * 255;
   const pixelStatusBuffer = [];
   const width = image.width;
@@ -64,7 +64,7 @@ export default function createFaller(canvas, { image, transparentColor, scatter 
   }
 
   function update() {
-    const minLooper = firstRow * width;
+    const minIterator = firstRow * width;
     flip = !flip;
 
     let y;
@@ -72,20 +72,21 @@ export default function createFaller(canvas, { image, transparentColor, scatter 
     let pixelStatusIndex;
     let newFirstRow;
     let pixelStatusBeneathIndex;
-    let looper = startIndex;
+    let iterator = startIndex;
     let offset = null;
 
     let leftOn;
     let rightOn;
 
     do {
-      looper--;
-      y = (looper * invWidth) << 0;
-      x = looper - y * width;
+      iterator--;
+      y = (iterator * invWidth) << 0;
+      x = iterator - y * width;
       if (flip) x = width - x - 1;
 
       pixelStatusIndex = x + y * width;
       if (pixelStatusBuffer[pixelStatusIndex] === EMPTY_SPACE) continue;
+      if (pixelStatusBuffer[pixelStatusIndex] === NOT_MOVING) continue;
 
       newFirstRow = y;
 
@@ -126,7 +127,7 @@ export default function createFaller(canvas, { image, transparentColor, scatter 
       }
 
       swapPixels(pixelStatusIndex, pixelStatusBeneathIndex + offset);
-    } while (looper > minLooper);
+    } while (iterator > minIterator);
 
     firstRow = newFirstRow - 1;
 
@@ -156,7 +157,7 @@ export default function createFaller(canvas, { image, transparentColor, scatter 
       ) {
         pixelStatusBuffer[index] = EMPTY_SPACE;
       } else {
-        pixelStatusBuffer[index] = NOT_MOVING;
+        pixelStatusBuffer[index] = interactive ? NOT_MOVING : MOVING;
       }
     }
   }
@@ -186,7 +187,6 @@ export default function createFaller(canvas, { image, transparentColor, scatter 
 
     canvasData = getImageData(width, height, image);
     calculatePixelStatus(canvasData);
-    console.log(`${pixelStatusBuffer.filter(el => el === EMPTY_SPACE).length / pixelStatusBuffer.length * 100 >> 0}% empty space in image`);
     startIndex = (canvasData.data.length >> 2) - 1;
     draw();
   }

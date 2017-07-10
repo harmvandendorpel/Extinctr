@@ -6,7 +6,8 @@ import {
   IMAGE_UNLOAD,
   IMAGE_CANVAS_READY,
   SET_TRANSPARENT_COLOR,
-  SET_SCATTER
+  SET_SCATTER,
+  TOGGLE_INTERACTIVE
 } from '../constants/ActionTypes';
 
 import { loadImage } from '../helpers/load';
@@ -78,5 +79,11 @@ export function changeScatter(sliderInfo) {
   return {
     type: SET_SCATTER,
     scatter: sliderInfo.values[0] / 100
+  };
+}
+
+export function toggleInteractive() {
+  return {
+    type: TOGGLE_INTERACTIVE
   };
 }

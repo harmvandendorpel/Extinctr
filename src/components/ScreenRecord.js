@@ -16,7 +16,8 @@ import * as RecorderActions from '../actions/RecorderActions';
     blobURL: state.recorder.blobURL,
     rendering: state.recorder.rendering,
     transparentColor: state.faller.transparentColor,
-    scatter: state.faller.scatter
+    scatter: state.faller.scatter,
+    interactive: state.faller.interactive
   }),
   {
     onCanvasReady: FallerActions.onCanvasReady,
@@ -27,7 +28,8 @@ import * as RecorderActions from '../actions/RecorderActions';
     resetImage: FallerActions.resetImage,
     unloadImage: FallerActions.unloadImage,
     changeScatter: FallerActions.changeScatter,
-    setTransparentColor: FallerActions.setTransparentColor
+    setTransparentColor: FallerActions.setTransparentColor,
+    toggleInteractive: FallerActions.toggleInteractive
   }
 )
 export default class ScreenRecord extends Component {
@@ -47,7 +49,9 @@ export default class ScreenRecord extends Component {
     transparentColor: PropTypes.arrayOf(PropTypes.number).isRequired,
     onCanvasReady: PropTypes.func.isRequired,
     changeScatter: PropTypes.func.isRequired,
-    scatter: PropTypes.number.isRequired
+    toggleInteractive: PropTypes.func.isRequired,
+    scatter: PropTypes.number.isRequired,
+    interactive: PropTypes.bool.isRequired
   };
 
   static defaultProps = {
@@ -113,6 +117,11 @@ export default class ScreenRecord extends Component {
       <div>
         {this.loadingButtons()}
         {this.colorPicker()}
+        <input
+          type="checkbox"
+          onChange={this.props.toggleInteractive.bind(this)}
+          checked={this.props.interactive}
+        />
       </div>
     );
   }

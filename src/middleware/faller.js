@@ -9,7 +9,8 @@ import {
   IMAGE_LOADED,
   RECORDING_DONE,
   SET_TRANSPARENT_COLOR,
-  SET_SCATTER
+  SET_SCATTER,
+  TOGGLE_INTERACTIVE
 } from '../constants/ActionTypes';
 import createFaller from '../canvas/faller';
 import createRecorder from '../canvas/recorder';
@@ -84,6 +85,10 @@ const fallerMiddleware = store => next => (action) => {
       if (!isEqual(store.getState().faller.transparentColor, transparentColor)) {
         initFaller(store);
       }
+      break;
+
+    case TOGGLE_INTERACTIVE:
+      initFaller(store);
       break;
 
     case SET_SCATTER:

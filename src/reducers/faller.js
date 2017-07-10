@@ -5,7 +5,8 @@ import {
   IMAGE_LOADED,
   IMAGE_UNLOAD,
   SET_TRANSPARENT_COLOR,
-  SET_SCATTER
+  SET_SCATTER,
+  TOGGLE_INTERACTIVE
 } from '../constants/ActionTypes';
 
 const initTransparentColor = [255, 255, 255, 255];
@@ -13,6 +14,7 @@ const initState = {
   loading: false,
   loaded: false,
   playing: false,
+  interactive: false,
   image: null,
   filename: null,
   scatter: 0.1,
@@ -63,6 +65,12 @@ export default function faller(state = initState, action) {
       return {
         ...state,
         scatter: action.scatter
+      };
+
+    case TOGGLE_INTERACTIVE:
+      return {
+        ...state,
+        interactive: !state.interactive
       };
 
     default:
