@@ -64,7 +64,7 @@ export default function createFaller(canvas, { image, interactive, transparentCo
   }
 
   function update() {
-    const minIterator = firstRow * width;
+    const minIterator = interactive ? 0 : firstRow * width;
     flip = !flip;
 
     let y;
@@ -181,7 +181,29 @@ export default function createFaller(canvas, { image, interactive, transparentCo
     noSmoothing(ctx);
   }
 
+  function onTouchPixel(x, y) {
+    const r = 8;
+
+    for (let iy = Math.max(0, y - r); iy < Math.min(height, y + r); iy++) {
+      for (let ix = Math.max(0, x - r); ix < Math.min(width, x + r); ix++) {
+        const index = ix + iy * width;
+        if (pixelStatusBuffer[index] === NOT_MOVING) {
+          pixelStatusBuffer[index] = MOVING;
+        }
+      }
+    }
+  }
+
+  function initEvents() {
+    canvas.addEventListener('mousemove', (e) => {
+      const x = e.offsetX * window.devicePixelRatio;
+      const y = e.offsetY * window.devicePixelRatio;
+      onTouchPixel(x, y);
+    });
+  }
+
   function init() {
+    initEvents();
     initScratchCanvas();
     initVisibleCanvas();
 
@@ -204,6 +226,7 @@ export default function createFaller(canvas, { image, interactive, transparentCo
   }
 
   init();
+
   return {
     update,
     getContext,

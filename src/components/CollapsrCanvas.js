@@ -12,7 +12,10 @@ export default class CollapsrCanvas extends Component {
 
   render() {
     return (
-      <canvas className={'faller'} ref={(canvas) => { this.canvas = canvas; }} />
+      <canvas
+        className={'faller'}
+        ref={(canvas) => { this.canvas = canvas; }}
+      />
     );
   }
 }

@@ -7,7 +7,7 @@ import {
   IMAGE_CANVAS_READY,
   SET_TRANSPARENT_COLOR,
   SET_SCATTER,
-  TOGGLE_INTERACTIVE
+  TOGGLE_INTERACTIVE,
 } from '../constants/ActionTypes';
 
 import { loadImage } from '../helpers/load';
