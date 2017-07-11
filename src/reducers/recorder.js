@@ -3,13 +3,15 @@ import {
   RECORDING_STOP,
   RECORDING_RENDERING,
   RECORDING_DONE,
-  IMAGE_UNLOAD
+  IMAGE_UNLOAD,
+  SET_FRAME_RECORD_INTERVAL
 } from '../constants/ActionTypes';
 
 const initState = {
   recording: false,
   rendering: false,
-  blobURL: null
+  blobURL: null,
+  frameRecordInterval: 0 // 0 means every frame, 1 means every other frame, etc.
 };
 
 export default function recorderReducer(state = initState, action) {
@@ -47,6 +49,11 @@ export default function recorderReducer(state = initState, action) {
         blobURL: null
       };
 
+    case SET_FRAME_RECORD_INTERVAL:
+      return {
+        ...state,
+        frameRecordInterval: action.frameRecordInterval
+      };
     default:
       return state;
   }

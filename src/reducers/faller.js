@@ -6,7 +6,7 @@ import {
   IMAGE_UNLOAD,
   SET_TRANSPARENT_COLOR,
   SET_SCATTER,
-  TOGGLE_INTERACTIVE
+  TOGGLE_INTERACTIVE,
 } from '../constants/ActionTypes';
 
 const initTransparentColor = [255, 255, 255, 255];

@@ -17,7 +17,8 @@ import * as RecorderActions from '../actions/RecorderActions';
     rendering: state.recorder.rendering,
     transparentColor: state.faller.transparentColor,
     scatter: state.faller.scatter,
-    interactive: state.faller.interactive
+    interactive: state.faller.interactive,
+    frameRecordInterval: state.recorder.frameRecordInterval
   }),
   {
     onCanvasReady: FallerActions.onCanvasReady,
@@ -28,6 +29,7 @@ import * as RecorderActions from '../actions/RecorderActions';
     resetImage: FallerActions.resetImage,
     unloadImage: FallerActions.unloadImage,
     changeScatter: FallerActions.changeScatter,
+    changeFrameRecordInterval: RecorderActions.changeFrameRecordInterval,
     setTransparentColor: FallerActions.setTransparentColor,
     toggleInteractive: FallerActions.toggleInteractive
   }
@@ -50,6 +52,8 @@ export default class ScreenRecord extends Component {
     onCanvasReady: PropTypes.func.isRequired,
     changeScatter: PropTypes.func.isRequired,
     toggleInteractive: PropTypes.func.isRequired,
+    changeFrameRecordInterval: PropTypes.func.isRequired,
+    frameRecordInterval: PropTypes.number.isRequired,
     scatter: PropTypes.number.isRequired,
     interactive: PropTypes.bool.isRequired
   };
@@ -142,6 +146,16 @@ export default class ScreenRecord extends Component {
             min={0}
             max={95}
             values={[this.props.scatter * 100]}
+          />
+        </label>
+
+        <label>
+          {this.props.frameRecordInterval === 0 ? 'record every frame' : `skip ${this.props.frameRecordInterval} frames`}
+          <Rheostat
+            onValuesUpdated={this.props.changeFrameRecordInterval.bind(this)}
+            min={0}
+            max={100}
+            values={[this.props.frameRecordInterval]}
           />
         </label>
       </div>
