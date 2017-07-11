@@ -126,6 +126,18 @@ export default class ScreenRecord extends Component {
           onChange={this.props.toggleInteractive.bind(this)}
           checked={this.props.interactive}
         />
+
+        <div>
+          <label>
+            {this.props.frameRecordInterval === 0 ? 'record every frame' : `skip ${this.props.frameRecordInterval} frames`}
+            <Rheostat
+              onValuesUpdated={this.props.changeFrameRecordInterval.bind(this)}
+              min={0}
+              max={100}
+              values={[this.props.frameRecordInterval]}
+            />
+          </label>
+        </div>
       </div>
     );
   }
@@ -146,16 +158,6 @@ export default class ScreenRecord extends Component {
             min={0}
             max={95}
             values={[this.props.scatter * 100]}
-          />
-        </label>
-
-        <label>
-          {this.props.frameRecordInterval === 0 ? 'record every frame' : `skip ${this.props.frameRecordInterval} frames`}
-          <Rheostat
-            onValuesUpdated={this.props.changeFrameRecordInterval.bind(this)}
-            min={0}
-            max={100}
-            values={[this.props.frameRecordInterval]}
           />
         </label>
       </div>

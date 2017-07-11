@@ -10,7 +10,8 @@ import {
   RECORDING_DONE,
   SET_TRANSPARENT_COLOR,
   SET_SCATTER,
-  TOGGLE_INTERACTIVE
+  TOGGLE_INTERACTIVE,
+  SET_FRAME_RECORD_INTERVAL
 } from '../constants/ActionTypes';
 import createFaller from '../canvas/faller';
 import createRecorder from '../canvas/recorder';
@@ -23,21 +24,35 @@ let image = null;
 let playing = false;
 let recording = false;
 let transparentColor = null;
+let frameRecordIntervalCounter = 0;
+let frameRecordInterval = null;
 
 function update() {
   window.requestAnimationFrame(update);
   if (!playing) return;
   if (recording) {
-    recorder.addFrame();
+    console.log(frameRecordInterval, frameRecordIntervalCounter);
+    if (frameRecordIntervalCounter >= frameRecordInterval) {
+      console.log('create frame');
+      recorder.addFrame();
+      frameRecordIntervalCounter = 0;
+    } else {
+      frameRecordIntervalCounter++;
+    }
   }
   faller.update();
 }
 
 function initFaller(store) {
   if (!image || !canvas) return;
-  const settings = { ...store.getState().faller, image };
+  const state = store.getState();
+  const settings = {
+    ...state.faller,
+    image
+  };
 
   transparentColor = settings.transparentColor;
+  frameRecordInterval = state.recorder.frameRecordInterval;
   if (faller) faller.destroy();
   faller = createFaller(
     canvas, settings
@@ -93,6 +108,10 @@ const fallerMiddleware = store => next => (action) => {
 
     case SET_SCATTER:
       faller.setScatter(action.scatter);
+      break;
+
+    case SET_FRAME_RECORD_INTERVAL:
+      frameRecordInterval = action.frameRecordInterval;
       break;
 
     default:
