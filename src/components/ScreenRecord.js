@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import Rheostat from 'rheostat';
 import CollapsrCanvas from './CollapsrCanvas';
 import ColorPicker from './ColorPicker';
+import { niceCount } from '../helpers/stuff'
 import './CollapsrCanvas.scss';
 import * as FallerActions from '../actions/FallerActions';
 import * as RecorderActions from '../actions/RecorderActions';
@@ -34,6 +35,7 @@ import * as RecorderActions from '../actions/RecorderActions';
     toggleInteractive: FallerActions.toggleInteractive
   }
 )
+
 export default class ScreenRecord extends Component {
   static propTypes = {
     recording: PropTypes.bool.isRequired,
@@ -116,25 +118,35 @@ export default class ScreenRecord extends Component {
   }
 
   options() {
-    if (this.props.rendering || this.props.playing) return null;
+    const {
+      frameRecordInterval,
+      changeFrameRecordInterval,
+      toggleInteractive,
+      interactive,
+      rendering,
+      playing
+    } = this.props;
+    if (rendering || playing) return null;
+
     return (
       <div>
         {this.loadingButtons()}
         {this.colorPicker()}
         <input
           type="checkbox"
-          onChange={this.props.toggleInteractive.bind(this)}
-          checked={this.props.interactive}
+          onChange={toggleInteractive.bind(this)}
+          checked={interactive}
         />
 
         <div>
           <label>
-            {this.props.frameRecordInterval === 0 ? 'record every frame' : `skip ${this.props.frameRecordInterval} frames`}
+            {frameRecordInterval === 0 ?
+              'record every frame' : `record every ${niceCount(frameRecordInterval + 1)} frame`}
             <Rheostat
-              onValuesUpdated={this.props.changeFrameRecordInterval.bind(this)}
+              onValuesUpdated={changeFrameRecordInterval.bind(this)}
               min={0}
-              max={100}
-              values={[this.props.frameRecordInterval]}
+              max={19}
+              values={[frameRecordInterval]}
             />
           </label>
         </div>

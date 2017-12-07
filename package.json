@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "My simple redux application.",
   "scripts": {
-    "prestart": "npm install",
     "clean": "rimraf dist",
     "build:webpack": "cross-env NODE_ENV=production webpack --config webpack.config.prod.js --progress --profile --colors",
     "build": "npm run clean && npm run build:webpack --progress --profile --colors",
@@ -61,6 +60,7 @@
     "react-drop-to-upload": "0.0.1",
     "react-redux": "^5.0.5",
     "redux": "^3.6.0",
-    "redux-thunk": "^2.2.0"
+    "redux-thunk": "^2.2.0",
+    "rheostat": "^2.1.1"
   }
 }
