@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import Rheostat from 'rheostat';
 import CollapsrCanvas from './CollapsrCanvas';
 import ColorPicker from './ColorPicker';
-import { niceCount } from '../helpers/stuff'
+import { niceCount } from '../helpers/stuff';
 import './CollapsrCanvas.scss';
 import * as FallerActions from '../actions/FallerActions';
 import * as RecorderActions from '../actions/RecorderActions';

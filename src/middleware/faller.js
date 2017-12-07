@@ -31,9 +31,7 @@ function update() {
   window.requestAnimationFrame(update);
   if (!playing) return;
   if (recording) {
-    console.log(frameRecordInterval, frameRecordIntervalCounter);
     if (frameRecordIntervalCounter >= frameRecordInterval) {
-      console.log('create frame');
       recorder.addFrame();
       frameRecordIntervalCounter = 0;
     } else {
