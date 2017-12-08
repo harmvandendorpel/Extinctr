@@ -2,6 +2,8 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import './ColorPicker.scss';
 
+const colorPickerCursorClassName = 'faller__color-picker';
+
 export default class ColorPicker extends Component {
   static propTypes = {
     canvasSelector: PropTypes.string.isRequired,
@@ -71,7 +73,15 @@ export default class ColorPicker extends Component {
   }
 
   render() {
+    const { sampling } = this.state;
     const backgroundColor = this.cssColor();
+    const body = document.querySelector('body');
+    const cursorClassNameFunction = sampling ?
+      body.classList.add :
+      body.classList.remove;
+
+    cursorClassNameFunction.apply(body.classList, [colorPickerCursorClassName]);
+
     return (<div
       className={'ColorPicker'}
       style={{ backgroundColor }}

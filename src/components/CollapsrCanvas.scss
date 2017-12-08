@@ -1,3 +1,8 @@
 .faller {
   display: block;
 }
+
+.faller__color-picker {
+  cursor: url('/img/colorpicker.png') 0 16, auto;
+  cursor: -webkit-image-set(url("/img/colorpicker.png") 1x, url("/img/colorpicker.png") 2x) 2 14, pointer;
+}

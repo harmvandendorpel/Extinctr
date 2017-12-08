@@ -35,7 +35,6 @@ import * as RecorderActions from '../actions/RecorderActions';
     toggleInteractive: FallerActions.toggleInteractive
   }
 )
-
 export default class ScreenRecord extends Component {
   static propTypes = {
     recording: PropTypes.bool.isRequired,

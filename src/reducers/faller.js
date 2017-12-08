@@ -33,7 +33,11 @@ export default function faller(state = initState, action) {
       return state;
 
     case IMAGE_LOADING:
-      return { ...state, loading: true, playing: false };
+      return {
+        ...state,
+        loading: true,
+        playing: false
+      };
 
     case IMAGE_LOADED:
       return {
