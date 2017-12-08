@@ -7,7 +7,6 @@ import {
   RECORDING_START,
   RECORDING_STOP,
   IMAGE_LOADED,
-  RECORDING_DONE,
   SET_TRANSPARENT_COLOR,
   SET_SCATTER,
   TOGGLE_INTERACTIVE,
@@ -15,6 +14,7 @@ import {
 } from '../constants/ActionTypes';
 import createFaller from '../canvas/faller';
 import createRecorder from '../canvas/recorder';
+import { doneRecording } from '../actions/RecorderActions';
 
 let recorder = null;
 let faller = null;
@@ -89,8 +89,7 @@ const fallerMiddleware = store => next => (action) => {
     case RECORDING_STOP:
       recording = false;
       recorder.save().then((blobURL) => {
-        store.dispatch({ type: RECORDING_DONE, blobURL });
-        window.open(blobURL);
+        store.dispatch(doneRecording(blobURL));
       });
       break;
 

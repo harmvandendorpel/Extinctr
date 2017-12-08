@@ -29,6 +29,10 @@
     "window": true,
     "Image": true,
     "URL": true,
-    "alert": true
+    "alert": true,
+    "fetch": true,
+    "Request": true,
+    "XMLHttpRequest": true,
+    "FormData": true
   }
 }
