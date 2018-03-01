@@ -19,7 +19,7 @@ export default function createRecorder(canvas, {
 
   function save() {
     return new Promise((resolve) => {
-      gif.on('finished', blob => resolve(URL.createObjectURL(blob)));
+      gif.on('finished', blob => resolve(blob));
       gif.render();
     });
   }

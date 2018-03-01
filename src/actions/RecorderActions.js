@@ -39,28 +39,43 @@ export function changeFrameRecordInterval(sliderInfo) {
   };
 }
 
-export function startUpload(blobURL) {
+export function startUpload(blob) {
   return (dispatch) => {
     dispatch({ type: RECORDING_UPLOAD_START });
 
-    const xhr = new XMLHttpRequest();
-    xhr.open('GET', blobURL, true);
-    xhr.responseType = 'blob';
+    const username = 'extinctrdotcom';
+    const apiKey = 'UatD2Tb9OUZI8KxYYhstRjqU6rPtBo4y';
 
-    xhr.onload = function () {
-      const blob = this.response; // not happy with 'this' here at all
-      const formData = new FormData();
-      formData.append('animated_gif', blob);
-      fetch('/api/upload', { method: 'POST', body: formData })
-        .then(() => dispatch({ type: RECORDING_UPLOAD_COMPLETE }));
-    };
-    xhr.send();
+    const formData = new FormData();
+    formData.append('file', blob, 'extinctr.gif');
+    formData.append('username', username);
+    formData.append('api_key', apiKey);
+    formData.append('tags', 'extinctr');
+    formData.append('source_post_url', 'https://extinctr.com');
+
+    fetch('https://upload.giphy.com/v1/gifs', {
+      method: 'POST',
+      body: formData,
+      mode: 'cors'
+    }).then(response => response.json())
+      .catch((error) => { console.error('Error:', error); })
+      .then((res) => {
+        if (res.meta && res.meta.status === 200) {
+          const id = res.data.id;
+          const url = `https://giphy.com/gifs/${username}-${id}`;
+          window.open(url);
+          dispatch({ type: RECORDING_UPLOAD_COMPLETE })
+        } else {
+          dispatch({ type: RECORDING_UPLOAD_COMPLETE })
+          console.error('Upload failed.');
+        }
+      });
   };
 }
 
-export function doneRecording(blobURL) {
+export function doneRecording(blob) {
   return (dispatch) => {
-    dispatch({ type: RECORDING_DONE, blobURL });
-    dispatch(startUpload(blobURL));
+    dispatch({ type: RECORDING_DONE, blob });
+    dispatch(startUpload(blob));
   };
 }
