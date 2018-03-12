@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 
-import ScreenUpload from '../components/ScreenUpload';
-import ScreenRecord from '../components/ScreenRecord';
+import ScreenUpload from '../components/ScreenUpload'
+import ScreenRecord from '../components/ScreenRecord'
 
 @connect(
   state => ({
@@ -16,7 +16,7 @@ export default class App extends Component {
   };
 
   render() {
-    const screen = this.props.imageLoaded ? <ScreenRecord /> : <ScreenUpload />;
-    return <div className="main-app-container">{ screen }</div>;
+    const screen = this.props.imageLoaded ? <ScreenRecord /> : <ScreenUpload />
+    return <div className="main-app-container">{ screen }</div>
   }
 }

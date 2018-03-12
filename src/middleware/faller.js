@@ -1,5 +1,5 @@
-import isEqual from 'lodash.isequal';
-import { toHex } from '../helpers/colors';
+import isEqual from 'lodash.isequal'
+import { toHex } from '../helpers/colors'
 import {
   IMAGE_CANVAS_READY,
   PLAY,
@@ -11,112 +11,112 @@ import {
   SET_SCATTER,
   TOGGLE_INTERACTIVE,
   SET_FRAME_RECORD_INTERVAL
-} from '../constants/ActionTypes';
-import createFaller from '../canvas/faller';
-import createRecorder from '../canvas/recorder';
-import { doneRecording } from '../actions/RecorderActions';
+} from '../constants/ActionTypes'
+import createFaller from '../canvas/faller'
+import createRecorder from '../canvas/recorder'
+import { doneRecording } from '../actions/RecorderActions'
 
-let recorder = null;
-let faller = null;
-let canvas = null;
-let image = null;
+let recorder = null
+let faller = null
+let canvas = null
+let image = null
 
-let playing = false;
-let recording = false;
-let transparentColor = null;
-let frameRecordIntervalCounter = 0;
-let frameRecordInterval = null;
+let playing = false
+let recording = false
+let transparentColor = null
+let frameRecordIntervalCounter = 0
+let frameRecordInterval = null
 
 function update() {
-  window.requestAnimationFrame(update);
-  if (!playing) return;
+  window.requestAnimationFrame(update)
+  if (!playing) return
   if (recording) {
     if (frameRecordIntervalCounter >= frameRecordInterval) {
-      recorder.addFrame();
-      frameRecordIntervalCounter = 0;
+      recorder.addFrame()
+      frameRecordIntervalCounter = 0
     } else {
-      frameRecordIntervalCounter++;
+      frameRecordIntervalCounter++
     }
   }
-  faller.update();
+  faller.update()
 }
 
 function initFaller(store) {
-  if (!image || !canvas) return;
-  const state = store.getState();
+  if (!image || !canvas) return
+  const state = store.getState()
   const settings = {
     ...state.faller,
     image
-  };
+  }
 
-  transparentColor = settings.transparentColor;
-  frameRecordInterval = state.recorder.frameRecordInterval;
-  if (faller) faller.destroy();
+  transparentColor = settings.transparentColor
+  frameRecordInterval = state.recorder.frameRecordInterval
+  if (faller) faller.destroy()
   faller = createFaller(
     canvas, settings
-  );
+  )
 }
 
 const fallerMiddleware = store => next => (action) => {
-  const result = next(action);
+  const result = next(action)
   switch (action.type) {
     case IMAGE_LOADED:
-      image = action.image;
-      initFaller(store);
-      break;
+      image = action.image
+      initFaller(store)
+      break
 
     case IMAGE_CANVAS_READY:
-      canvas = action.canvas;
-      initFaller(store);
-      break;
+      canvas = action.canvas
+      initFaller(store)
+      break
 
     case PLAY:
-      playing = true;
-      break;
+      playing = true
+      break
 
     case PAUSE:
-      playing = false;
-      break;
+      playing = false
+      break
 
     case RECORDING_START:
-      if (recorder) recorder.destroy();
+      if (recorder) recorder.destroy()
       recorder = createRecorder(canvas, {
         backgroundColor: toHex(transparentColor)
-      });
-      recording = true;
-      break;
+      })
+      recording = true
+      break
 
     case RECORDING_STOP:
-      recording = false;
+      recording = false
       recorder.save().then((blobURL) => {
-        store.dispatch(doneRecording(blobURL));
-      });
-      break;
+        store.dispatch(doneRecording(blobURL))
+      })
+      break
 
     case SET_TRANSPARENT_COLOR:
       if (!isEqual(store.getState().faller.transparentColor, transparentColor)) {
-        initFaller(store);
+        initFaller(store)
       }
-      break;
+      break
 
     case TOGGLE_INTERACTIVE:
-      initFaller(store);
-      break;
+      initFaller(store)
+      break
 
     case SET_SCATTER:
-      faller.setScatter(action.scatter);
-      break;
+      faller.setScatter(action.scatter)
+      break
 
     case SET_FRAME_RECORD_INTERVAL:
-      frameRecordInterval = action.frameRecordInterval;
-      break;
+      frameRecordInterval = action.frameRecordInterval
+      break
 
     default:
-      break;
+      break
   }
-  return result;
-};
+  return result
+}
 
-update();
+update()
 
-export default fallerMiddleware;
+export default fallerMiddleware

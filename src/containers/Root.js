@@ -4,12 +4,12 @@
  * surrounded by a <Provider>.
  */
 
-let loadedModule = null;
+let loadedModule = null
 
 if (process.env.NODE_ENV === 'production') {
-  loadedModule = require('./Root.prod.js');
+  loadedModule = require('./Root.prod.js')
 } else {
-  loadedModule = require('./Root.dev.js');
+  loadedModule = require('./Root.dev.js')
 }
 
-export const Root = loadedModule;
+export const Root = loadedModule

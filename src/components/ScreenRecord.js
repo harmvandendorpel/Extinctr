@@ -1,13 +1,13 @@
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import Rheostat from 'rheostat';
-import CollapsrCanvas from './CollapsrCanvas';
-import ColorPicker from './ColorPicker';
-import { niceCount } from '../helpers/stuff';
-import './CollapsrCanvas.scss';
-import * as FallerActions from '../actions/FallerActions';
-import * as RecorderActions from '../actions/RecorderActions';
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import Rheostat from 'rheostat'
+import CollapsrCanvas from './CollapsrCanvas'
+import ColorPicker from './ColorPicker'
+import { niceCount } from '../helpers/stuff'
+import './CollapsrCanvas.scss'
+import * as FallerActions from '../actions/FallerActions'
+import * as RecorderActions from '../actions/RecorderActions'
 
 @connect(
   state => ({
@@ -65,22 +65,22 @@ export default class ScreenRecord extends Component {
 
   recordingButton() {
     if (this.props.rendering) {
-      return (<button>rendering...</button>);
+      return (<button>rendering...</button>)
     }
     return this.props.recording ?
       <button onClick={this.props.stopRecording.bind(this)}>■</button> :
       this.props.playing ?
         null :
-        <button onClick={this.props.startRecording.bind(this)}>●</button>;
+        <button onClick={this.props.startRecording.bind(this)}>●</button>
   }
 
   playPauseButton() {
-    if (this.props.recording) return null;
+    if (this.props.recording) return null
     return this.props.playing ?
       <button onClick={this.props.pauseAnimation.bind(this)}>‖</button> :
       this.props.rendering ?
         null :
-        <button onClick={this.props.playAnimation.bind(this)}>▶</button>;
+        <button onClick={this.props.playAnimation.bind(this)}>▶</button>
   }
 
   previewImage() {
@@ -92,7 +92,7 @@ export default class ScreenRecord extends Component {
           width={this.props.image.width / window.devicePixelRatio}
           height={this.props.image.height / window.devicePixelRatio}
         />
-      ) : null;
+      ) : null
   }
 
   loadingButtons() {
@@ -101,7 +101,7 @@ export default class ScreenRecord extends Component {
         <button onClick={this.props.resetImage.bind(this)}>reset</button>
         <button onClick={this.props.unloadImage.bind(this)}>&times;</button>
       </span>
-    );
+    )
   }
 
   colorPicker() {
@@ -113,7 +113,7 @@ export default class ScreenRecord extends Component {
         width={this.props.image.width}
         height={this.props.image.height}
       />
-    );
+    )
   }
 
   options() {
@@ -124,8 +124,8 @@ export default class ScreenRecord extends Component {
       interactive,
       rendering,
       playing
-    } = this.props;
-    if (rendering || playing) return null;
+    } = this.props
+    if (rendering || playing) return null
 
     return (
       <div>
@@ -150,7 +150,7 @@ export default class ScreenRecord extends Component {
           </label>
         </div>
       </div>
-    );
+    )
   }
 
   render() {
@@ -172,6 +172,6 @@ export default class ScreenRecord extends Component {
           />
         </label>
       </div>
-    );
+    )
   }
 }

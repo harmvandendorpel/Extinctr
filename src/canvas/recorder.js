@@ -1,4 +1,4 @@
-import GIF from 'gif.js.optimized';
+import GIF from 'gif.js.optimized'
 
 export default function createRecorder(canvas, {
   backgroundColor, workers = 5, quality = 10, delay = 50
@@ -8,20 +8,20 @@ export default function createRecorder(canvas, {
     quality,
     debug: true,
     background: backgroundColor
-  });
+  })
 
   function addFrame() {
     gif.addFrame(canvas, {
       delay,
       copy: true
-    });
+    })
   }
 
   function save() {
     return new Promise((resolve) => {
-      gif.on('finished', blob => resolve(blob));
-      gif.render();
-    });
+      gif.on('finished', blob => resolve(blob))
+      gif.render()
+    })
   }
 
   function destroy() {
@@ -32,5 +32,5 @@ export default function createRecorder(canvas, {
     addFrame,
     save,
     destroy,
-  };
+  }
 }

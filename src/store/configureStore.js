@@ -4,12 +4,12 @@
  * The code is envify'd - using 'DefinePlugin' in Webpack.
  */
 
-let loadedStore = null;
+let loadedStore = null
 
 if (process.env.NODE_ENV === 'production') {
-  loadedStore = require('./configureStore.prod');
+  loadedStore = require('./configureStore.prod')
 } else {
-  loadedStore = require('./configureStore.dev');
+  loadedStore = require('./configureStore.dev')
 }
 
-export const configureStore = loadedStore;
+export const configureStore = loadedStore
