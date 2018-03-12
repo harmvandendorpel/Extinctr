@@ -28,7 +28,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: 'index.html',
       filename: 'index.html',
-      title: 'Collapsr',
+      title: 'extinctr',
       inject: 'body'
     }),
     /**
