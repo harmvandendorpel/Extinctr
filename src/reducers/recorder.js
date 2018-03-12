@@ -37,6 +37,7 @@ export default function recorderReducer(state = initState, action) {
       }
 
     case RECORDING_DONE:
+      console.log(action)
       return {
         ...state,
         rendering: false,

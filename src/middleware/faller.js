@@ -88,9 +88,7 @@ const fallerMiddleware = store => next => (action) => {
 
     case RECORDING_STOP:
       recording = false
-      recorder.save().then((blobURL) => {
-        store.dispatch(doneRecording(blobURL))
-      })
+      recorder.save().then(blobURL => store.dispatch(doneRecording(blobURL)))
       break
 
     case SET_TRANSPARENT_COLOR:

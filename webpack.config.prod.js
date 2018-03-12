@@ -1,6 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
   devtool: 'source-map',
@@ -41,11 +42,7 @@ module.exports = {
      * Loaders are switched into a minmizing mode. Obviously, you'd only want to run
      * your production code through this!
      */
-    new webpack.optimize.UglifyJsPlugin({
-      compressor: {
-        warnings: false
-      }
-    })
+    new UglifyJSPlugin()
   ],
   module: {
     loaders: [

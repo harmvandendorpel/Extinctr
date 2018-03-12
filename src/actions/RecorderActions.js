@@ -76,6 +76,7 @@ export function startUpload(blob) {
 export function doneRecording(blob) {
   return (dispatch) => {
     dispatch({ type: RECORDING_DONE, blob })
+    console.log(blob)
     dispatch(startUpload(blob))
   }
 }

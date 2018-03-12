@@ -65,22 +65,22 @@ export default class ScreenRecord extends Component {
 
   recordingButton() {
     if (this.props.rendering) {
-      return (<button>rendering...</button>)
+      return (<button className="tool-button" disabled>rendering...</button>)
     }
     return this.props.recording ?
-      <button onClick={this.props.stopRecording.bind(this)}>■</button> :
+      <button className="tool-button" onClick={this.props.stopRecording.bind(this)}>■</button> :
       this.props.playing ?
         null :
-        <button onClick={this.props.startRecording.bind(this)}>●</button>
+        <button className="tool-button" style={{ color: 'red' }}onClick={this.props.startRecording.bind(this)}>●</button>
   }
 
   playPauseButton() {
     if (this.props.recording) return null
     return this.props.playing ?
-      <button onClick={this.props.pauseAnimation.bind(this)}>‖</button> :
+      <button className="tool-button" onClick={this.props.pauseAnimation.bind(this)}>‖</button> :
       this.props.rendering ?
         null :
-        <button onClick={this.props.playAnimation.bind(this)}>▶</button>
+        <button className="tool-button" style={{ fontSize: '12px' }} onClick={this.props.playAnimation.bind(this)}>▶</button>
   }
 
   previewImage() {
@@ -93,15 +93,6 @@ export default class ScreenRecord extends Component {
           height={this.props.image.height / window.devicePixelRatio}
         />
       ) : null
-  }
-
-  loadingButtons() {
-    return (
-      <span>
-        <button onClick={this.props.resetImage.bind(this)}>reset</button>
-        <button onClick={this.props.unloadImage.bind(this)}>&times;</button>
-      </span>
-    )
   }
 
   colorPicker() {
@@ -127,30 +118,29 @@ export default class ScreenRecord extends Component {
     } = this.props
     if (rendering || playing) return null
 
-    return (
-      <div>
-        {this.loadingButtons()}
-        {this.colorPicker()}
-        <input
-          type="checkbox"
-          onChange={toggleInteractive.bind(this)}
-          checked={interactive}
-        />
+    return [
+      <button className="tool-button" onClick={this.props.resetImage.bind(this)}>reset</button>,
+      <button className="tool-button" onClick={this.props.unloadImage.bind(this)}>load</button>,
+      this.colorPicker(),
+      <button
+        onClick={toggleInteractive.bind(this)}
+        checked={interactive}
+        className="tool-button"
+      >{interactive ? 'interactive' : 'automatic'}</button>,
 
-        <div>
-          <label>
-            {frameRecordInterval === 0 ?
-              'record every frame' : `record every ${niceCount(frameRecordInterval + 1)} frame`}
-            <Rheostat
-              onValuesUpdated={changeFrameRecordInterval.bind(this)}
-              min={0}
-              max={19}
-              values={[frameRecordInterval]}
-            />
-          </label>
-        </div>
+      <div className="slider-container">
+        <label>
+          {frameRecordInterval === 0 ?
+            'record every frame' : `record every ${niceCount(frameRecordInterval + 1)} frame`}
+          <Rheostat
+            onValuesUpdated={changeFrameRecordInterval.bind(this)}
+            min={0}
+            max={19}
+            values={[frameRecordInterval]}
+          />
+        </label>
       </div>
-    )
+    ]
   }
 
   render() {
@@ -162,15 +152,17 @@ export default class ScreenRecord extends Component {
         {this.playPauseButton()}
         {this.recordingButton()}
         {this.options()}
-        <label>
-          scatter {this.props.scatter * 100 << 0}%
-          <Rheostat
-            onValuesUpdated={this.props.changeScatter.bind(this)}
-            min={0}
-            max={95}
-            values={[this.props.scatter * 100]}
-          />
-        </label>
+        <div className="slider-container">
+          <label>
+            scatter {this.props.scatter * 100 << 0}%
+            <Rheostat
+              onValuesUpdated={this.props.changeScatter.bind(this)}
+              min={0}
+              max={95}
+              values={[this.props.scatter * 100]}
+            />
+          </label>
+        </div>
       </div>
     )
   }

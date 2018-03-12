@@ -82,10 +82,10 @@ export default class ColorPicker extends Component {
 
     cursorClassNameFunction.apply(body.classList, [colorPickerCursorClassName])
 
-    return (<div
-      className={'ColorPicker'}
+    return (<button
+      className="ColorPicker tool-button"
       style={{ backgroundColor }}
       onClick={this.startSampling.bind(this)}
-    >&nbsp;</div>)
+    >background</button>)
   }
 }

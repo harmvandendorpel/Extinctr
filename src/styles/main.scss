@@ -1,5 +1,3 @@
-@import url(https://fonts.googleapis.com/css?family=Raleway:100,400);
-
 $main-bg-color: #f1f2f0;
 $accent-blue: #37bbe4;
 $accent-gray: #e1e0dd;
@@ -16,11 +14,29 @@ body, html {
 body {
   background-color: $main-bg-color;
   color: $accent-black;
-  font-family: 'Raleway', sans-serif;
+  font-family: Sans-Serif, helvetica;
 
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 15px;
+}
+
+button:focus {
+  outline:0;
+}
+
+
+.tool-button {
+  font-family: Sans-Serif, helvetica;
+  font-size: 15px;
+  padding: 5px 10px;
+  background-color: white;
+  -webkit-appearance: none;
+  height: 32px;
+  line-height: 100%;
+  float: left;
+  border: none;
 }
 
 .main-app-container {
@@ -54,7 +70,6 @@ body {
   padding-top: 3em;
 
   button {
-    background-color: #CCC;
     border: none;
     height: 30px;
     width: 80px;
@@ -86,5 +101,16 @@ footer {
   }
 }
 
+.slider-container {
+  float: left;
+  clear:both;
+  margin-top: 10px;
+  max-width: 200px;
+  width: 100%;
+
+  label {
+    margin-top: 10px;
+  }
+}
 
 @import 'slider';
