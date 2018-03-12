@@ -6,9 +6,7 @@ import App from './App'
 function Root({ store }) {
   return (
     <Provider store={store}>
-      <div>
-        <App />
-      </div>
+      <App />
     </Provider>
   )
 }

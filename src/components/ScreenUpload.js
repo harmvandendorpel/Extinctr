@@ -53,19 +53,17 @@ export default class ScreenUpload extends Component {
       this.state.dropAreaHover ? 'dropArea__hover' : null
     )
 
-    return (
-      <div>
-        <DropToUpload
-          onOver={this.handleHoverDropUpload.bind(this)}
-          onLeave={this.handleLeaveDropUpload.bind(this)}
-          onDropDataURI={this.handleDropDataURI.bind(this)}
-        >
-          <div className={dropAreaClassNames}>drop image here</div>
-        </DropToUpload>
-        <button onClick={this.loadTransTest.bind(this)}>example (transparent background)</button>
-        <button onClick={this.loadWhiteTest.bind(this)}>example (white background)</button>
-      </div>
-    )
+    return [
+      <DropToUpload
+        onOver={this.handleHoverDropUpload.bind(this)}
+        onLeave={this.handleLeaveDropUpload.bind(this)}
+        onDropDataURI={this.handleDropDataURI.bind(this)}
+      >
+        <div className={dropAreaClassNames}>drop image here</div>
+      </DropToUpload>,
+      <button onClick={this.loadTransTest.bind(this)}>example (transparent background)</button>,
+      <button onClick={this.loadWhiteTest.bind(this)}>example (white background)</button>
+    ]
   }
 }
 

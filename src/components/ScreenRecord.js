@@ -109,8 +109,6 @@ export default class ScreenRecord extends Component {
 
   options() {
     const {
-      frameRecordInterval,
-      changeFrameRecordInterval,
       toggleInteractive,
       interactive,
       rendering,
@@ -127,41 +125,55 @@ export default class ScreenRecord extends Component {
         checked={interactive}
         className="tool-button"
       >{interactive ? 'interactive' : 'automatic'}</button>,
-
-      <div className="slider-container">
-        <label>
-          {frameRecordInterval === 0 ?
-            'record every frame' : `record every ${niceCount(frameRecordInterval + 1)} frame`}
-          <Rheostat
-            onValuesUpdated={changeFrameRecordInterval.bind(this)}
-            min={0}
-            max={19}
-            values={[frameRecordInterval]}
-          />
-        </label>
-      </div>
     ]
   }
 
   render() {
+    const {
+      frameRecordInterval,
+      changeFrameRecordInterval,
+      rendering,
+      playing
+    } = this.props
     return (
       <div>
-        <CollapsrCanvas
-          onCanvasReady={this.props.onCanvasReady}
-        />
-        {this.playPauseButton()}
-        {this.recordingButton()}
-        {this.options()}
-        <div className="slider-container">
-          <label>
-            scatter {this.props.scatter * 100 << 0}%
-            <Rheostat
-              onValuesUpdated={this.props.changeScatter.bind(this)}
-              min={0}
-              max={95}
-              values={[this.props.scatter * 100]}
-            />
-          </label>
+        <div className="canvas-container" key="canvas-container">
+          <CollapsrCanvas
+            onCanvasReady={this.props.onCanvasReady}
+          />
+        </div>
+        <div className="tools-container">
+          {this.playPauseButton()}
+          {this.recordingButton()}
+          {this.options()}
+
+          <div className="sliders">
+            <div className="slider-container">
+              <label>
+                scatter {this.props.scatter * 100 << 0}%
+                <Rheostat
+                  onValuesUpdated={this.props.changeScatter.bind(this)}
+                  min={0}
+                  max={95}
+                  values={[this.props.scatter * 100]}
+                />
+              </label>
+            </div>
+            {!rendering && !playing &&
+            <div className="slider-container">
+              <label>
+                {frameRecordInterval === 0 ?
+                  'record every frame' : `record every ${niceCount(frameRecordInterval + 1)} frame`}
+                <Rheostat
+                  onValuesUpdated={changeFrameRecordInterval.bind(this)}
+                  min={0}
+                  max={19}
+                  values={[frameRecordInterval]}
+                />
+              </label>
+            </div>
+            }
+          </div>
         </div>
       </div>
     )

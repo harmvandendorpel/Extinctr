@@ -1,9 +1,21 @@
 .faller {
   display: block;
-  margin-bottom: 5px;
 }
 
 .faller__color-picker, .ColorPicker {
   cursor: url('/img/colorpicker.png') 0 16, auto;
   cursor: -webkit-image-set(url("/img/colorpicker.png") 1x, url("/img/colorpicker.png") 2x) 2 14, pointer;
+}
+
+.canvas-container {
+  width: 512px;
+  height: 512px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e1e1dd;
+}
+
+.tools-container {
+  height: 150px;
 }

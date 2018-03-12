@@ -7,10 +7,8 @@ import App from './App'
 function Root({ store }) {
   return (
     <Provider store={store}>
-      <div>
-        <App />
-        {/* <DevTools /> */}
-      </div>
+      <App />
+      {/* <DevTools /> */}
     </Provider>
   )
 }

@@ -34,6 +34,7 @@ button:focus {
   background-color: white;
   -webkit-appearance: none;
   height: 32px;
+  min-width: 32px;
   line-height: 100%;
   float: left;
   border: none;
@@ -101,13 +102,19 @@ footer {
   }
 }
 
+.sliders {
+  float:left;
+  clear: both;
+  width: 100%
+}
+
 .slider-container {
   float: left;
-  clear:both;
   margin-top: 10px;
-  max-width: 200px;
-  width: 100%;
+  width: 50%;
 
+  box-sizing: border-box;
+  padding-right: 16px;
   label {
     margin-top: 10px;
   }

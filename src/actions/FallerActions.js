@@ -47,7 +47,7 @@ export function unloadImage() {
 export function imageRequest(filename) {
   return (dispatch) => {
     dispatch(imageLoading())
-    loadImage(filename, { maxWidth: 1024, maxHeight: 1024 })
+    loadImage(filename, { maxWidth: 512, maxHeight: 512 })
       .then(image => dispatch(imageLoaded({ image, filename })))
       .catch(error => alert(error))
   }
