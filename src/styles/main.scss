@@ -37,6 +37,22 @@ button:focus {
   float: left;
   border: none;
   cursor: pointer;
+  color: black;
+  a {
+    color: black;
+    text-decoration: none;
+    &:active {
+      color:white;
+    }
+  }
+  &:active {
+    color:white;
+    background-color:black
+  }
+
+  &[disabled] {
+    cursor: default;
+  }
 }
 
 .main-app-container {

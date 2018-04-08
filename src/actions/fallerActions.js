@@ -12,13 +12,13 @@ import {
 
 import { loadImage } from '../helpers/load'
 
-export function play() {
+export function playAnimation() {
   return {
     type: PLAY
   }
 }
 
-export function pause() {
+export function pauseAnimation() {
   return {
     type: PAUSE
   }

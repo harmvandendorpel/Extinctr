@@ -6,34 +6,27 @@ import CollapsrCanvas from './CollapsrCanvas'
 import ColorPicker from './ColorPicker'
 import { niceCount } from '../helpers/stuff'
 import './CollapsrCanvas.scss'
-import * as FallerActions from '../actions/FallerActions'
-import * as RecorderActions from '../actions/RecorderActions'
+import * as fallerActions from '../actions/fallerActions'
+import * as uiActions from '../actions/ui'
+import * as recorderActions from '../actions/recorderActions'
+import Preview from '../components/Preview'
 
 @connect(
   state => ({
     image: state.faller.image,
+    ui: state.ui,
     playing: state.faller.playing,
+    uploading: state.recorder.uploading,
     recording: state.recorder.recording,
     blobURL: state.recorder.blobURL,
+    giphyURL: state.recorder.giphyURL,
     rendering: state.recorder.rendering,
     transparentColor: state.faller.transparentColor,
     scatter: state.faller.scatter,
     interactive: state.faller.interactive,
     frameRecordInterval: state.recorder.frameRecordInterval
   }),
-  {
-    onCanvasReady: FallerActions.onCanvasReady,
-    stopRecording: RecorderActions.stop,
-    startRecording: RecorderActions.start,
-    pauseAnimation: FallerActions.pause,
-    playAnimation: FallerActions.play,
-    resetImage: FallerActions.resetImage,
-    unloadImage: FallerActions.unloadImage,
-    changeScatter: FallerActions.changeScatter,
-    changeFrameRecordInterval: RecorderActions.changeFrameRecordInterval,
-    setTransparentColor: FallerActions.setTransparentColor,
-    toggleInteractive: FallerActions.toggleInteractive
-  }
+  { ...fallerActions, ...uiActions, ...recorderActions }
 )
 export default class ScreenRecord extends Component {
   static propTypes = {
@@ -56,12 +49,18 @@ export default class ScreenRecord extends Component {
     changeFrameRecordInterval: PropTypes.func.isRequired,
     frameRecordInterval: PropTypes.number.isRequired,
     scatter: PropTypes.number.isRequired,
-    interactive: PropTypes.bool.isRequired
-  };
+    interactive: PropTypes.bool.isRequired,
+    ui: PropTypes.object.isRequired,
+    hidePreview: PropTypes.func.isRequired,
+    startUpload: PropTypes.func.isRequired,
+    uploading: PropTypes.bool.isRequired,
+    giphyURL: PropTypes.string
+  }
 
   static defaultProps = {
-    blobURL: null
-  };
+    blobURL: null,
+    giphyURL: null
+  }
 
   recordingButton() {
     if (this.props.rendering) {
@@ -83,17 +82,17 @@ export default class ScreenRecord extends Component {
         <button className="tool-button" style={{ fontSize: '12px' }} onClick={this.props.playAnimation.bind(this)}>▶</button>
   }
 
-  previewImage() {
-    return this.props.blobURL !== null ?
-      (
-        <img
-          alt="preview"
-          src={this.props.blobURL}
-          width={this.props.image.width / window.devicePixelRatio}
-          height={this.props.image.height / window.devicePixelRatio}
-        />
-      ) : null
-  }
+  // previewImage() {
+  //   return this.props.blobURL !== null ?
+  //     (
+  //       <img
+  //         alt="preview"
+  //         src={this.props.blobURL}
+  //         width={this.props.image.width / window.devicePixelRatio}
+  //         height={this.props.image.height / window.devicePixelRatio}
+  //       />
+  //     ) : null
+  // }
 
   colorPicker() {
     return (
@@ -117,12 +116,21 @@ export default class ScreenRecord extends Component {
     if (rendering || playing) return null
 
     return [
-      <button className="tool-button" onClick={this.props.resetImage.bind(this)}>reset</button>,
-      <button className="tool-button" onClick={this.props.unloadImage.bind(this)}>load</button>,
+      <button
+        key="button-reset"
+        className="tool-button"
+        onClick={this.props.resetImage.bind(this)}
+      >reset</button>,
+      <button
+        key="button-unload"
+        className="tool-button"
+        onClick={this.props.unloadImage.bind(this)}
+      >load</button>,
       this.colorPicker(),
       <button
         onClick={toggleInteractive.bind(this)}
         checked={interactive}
+        key="button-interactive"
         className="tool-button"
       >{interactive ? 'interactive' : 'automatic'}</button>,
     ]
@@ -133,10 +141,17 @@ export default class ScreenRecord extends Component {
       frameRecordInterval,
       changeFrameRecordInterval,
       rendering,
-      playing
+      playing,
+      blobURL,
+      ui: { preview },
+      image,
+      hidePreview,
+      startUpload,
+      uploading,
+      giphyURL
     } = this.props
-    return (
-      <div>
+    return [
+      <div className={preview.visible ? 'blurred' : null} key="player">
         <div className="canvas-container" key="canvas-container">
           <CollapsrCanvas
             onCanvasReady={this.props.onCanvasReady}
@@ -148,6 +163,7 @@ export default class ScreenRecord extends Component {
           {this.options()}
 
           <div className="sliders">
+            {!rendering &&
             <div className="slider-container">
               <label>
                 scatter {this.props.scatter * 100 << 0}%
@@ -159,6 +175,7 @@ export default class ScreenRecord extends Component {
                 />
               </label>
             </div>
+            }
             {!rendering && !playing &&
             <div className="slider-container">
               <label>
@@ -175,7 +192,18 @@ export default class ScreenRecord extends Component {
             }
           </div>
         </div>
-      </div>
-    )
+      </div>,
+      <Preview
+        key="preview"
+        visible={preview.visible}
+        imageURL={blobURL}
+        width={image.width}
+        height={image.height}
+        onClose={hidePreview}
+        onSave={startUpload}
+        uploading={uploading}
+        giphyURL={giphyURL}
+      />
+    ]
   }
 }

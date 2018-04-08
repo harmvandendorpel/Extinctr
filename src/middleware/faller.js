@@ -14,7 +14,7 @@ import {
 } from '../constants/ActionTypes'
 import createFaller from '../canvas/faller'
 import createRecorder from '../canvas/recorder'
-import { doneRecording } from '../actions/RecorderActions'
+import { doneRecording } from '../actions/recorderActions'
 
 let recorder = null
 let faller = null

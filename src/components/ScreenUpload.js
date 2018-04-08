@@ -5,7 +5,7 @@ import classNames from 'classnames'
 import { connect } from 'react-redux'
 import './ScreenUpload.scss'
 
-import { imageRequest } from '../actions/FallerActions'
+import { imageRequest } from '../actions/fallerActions'
 
 @connect(
   () => ({}),
@@ -41,11 +41,9 @@ export default class ScreenUpload extends Component {
     this.props.imageRequest('/img/test4.png')
   }
 
-
   loadWhiteTest() {
     this.props.imageRequest('/img/test3.png')
   }
-
 
   render() {
     const dropAreaClassNames = classNames(
@@ -58,11 +56,12 @@ export default class ScreenUpload extends Component {
         onOver={this.handleHoverDropUpload.bind(this)}
         onLeave={this.handleLeaveDropUpload.bind(this)}
         onDropDataURI={this.handleDropDataURI.bind(this)}
+        key="upload-control"
       >
-        <div className={dropAreaClassNames}>drop image here</div>
-      </DropToUpload>,
-      <button onClick={this.loadTransTest.bind(this)}>example (transparent background)</button>,
-      <button onClick={this.loadWhiteTest.bind(this)}>example (white background)</button>
+        <div className={dropAreaClassNames}>
+          drop image here (maximum dimensions 512&times;512px)
+        </div>
+      </DropToUpload>
     ]
   }
 }

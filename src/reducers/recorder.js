@@ -4,13 +4,18 @@ import {
   RECORDING_RENDERING,
   RECORDING_DONE,
   IMAGE_UNLOAD,
-  SET_FRAME_RECORD_INTERVAL
+  SET_FRAME_RECORD_INTERVAL,
+  RECORDING_UPLOAD_START,
+  RECORDING_UPLOAD_COMPLETE
 } from '../constants/ActionTypes'
 
 const initState = {
   recording: false,
   rendering: false,
+  uploading: false,
   blobURL: null,
+  blob: null,
+  giphyURL: null,
   frameRecordInterval: 0 // 0 means every frame, 1 means every other frame, etc.
 }
 
@@ -21,7 +26,9 @@ export default function recorderReducer(state = initState, action) {
         ...state,
         recording: true,
         rendering: false,
-        blobURL: null
+        blobURL: null,
+        giphyURL: null,
+        blob: null
       }
 
     case RECORDING_STOP:
@@ -37,11 +44,28 @@ export default function recorderReducer(state = initState, action) {
       }
 
     case RECORDING_DONE: {
-      const { blobURL } = action.payload
+      const { blobURL, blob } = action.payload
       return {
         ...state,
         rendering: false,
-        blobURL
+        blobURL,
+        blob
+      }
+    }
+
+    case RECORDING_UPLOAD_START:
+      return {
+        ...state,
+        uploading: true,
+        giphyURL: null
+      }
+
+    case RECORDING_UPLOAD_COMPLETE: {
+      const { giphyURL } = action.payload
+      return {
+        ...state,
+        giphyURL,
+        uploading: false
       }
     }
 

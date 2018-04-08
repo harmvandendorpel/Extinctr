@@ -7,10 +7,13 @@ import {
   SET_FRAME_RECORD_INTERVAL,
   RECORDING_DONE,
   RECORDING_UPLOAD_START,
-  RECORDING_UPLOAD_COMPLETE
+  RECORDING_UPLOAD_COMPLETE,
+  RECORDING_UPLOAD_FAIL
 } from '../constants/ActionTypes'
 
-export function start() {
+import { showPreview, hidePreview } from './ui'
+
+export function startRecording() {
   return (dispatch, getState) => {
     if (!getState().faller.playing) {
       dispatch({
@@ -24,7 +27,7 @@ export function start() {
   }
 }
 
-export function stop() {
+export function stopRecording() {
   return (dispatch) => {
     dispatch({ type: PAUSE })
     dispatch({ type: RECORDING_STOP })
@@ -39,8 +42,10 @@ export function changeFrameRecordInterval(sliderInfo) {
   }
 }
 
-export function startUpload(blob) {
-  return (dispatch) => {
+export function startUpload() {
+  return (dispatch, getState) => {
+    const store = getState()
+    const blob = store.recorder.blob
     dispatch({ type: RECORDING_UPLOAD_START })
 
     const username = 'extinctrdotcom'
@@ -62,11 +67,15 @@ export function startUpload(blob) {
       .then((res) => {
         if (res.meta && res.meta.status === 200) {
           const id = res.data.id
-          const url = `https://giphy.com/gifs/${username}-${id}`
-          window.open(url)
-          dispatch({ type: RECORDING_UPLOAD_COMPLETE })
+          const giphyURL = `https://giphy.com/gifs/${username}-${id}`
+          // window.open(url)
+          dispatch({
+            type: RECORDING_UPLOAD_COMPLETE,
+            payload: { giphyURL, id },
+          })
+          // dispatch(hidePreview())
         } else {
-          dispatch({ type: RECORDING_UPLOAD_COMPLETE })
+          dispatch({ type: RECORDING_UPLOAD_FAIL })
           console.error('Upload failed.')
         }
       })
@@ -82,6 +91,7 @@ export function doneRecording(blob) {
         blobURL: URL.createObjectURL(blob)
       }
     })
+    dispatch(showPreview())
     // dispatch(startUpload(blob))
   }
 }
