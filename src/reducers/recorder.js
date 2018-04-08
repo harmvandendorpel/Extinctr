@@ -36,13 +36,14 @@ export default function recorderReducer(state = initState, action) {
         rendering: true
       }
 
-    case RECORDING_DONE:
-      console.log(action)
+    case RECORDING_DONE: {
+      const { blobURL } = action.payload
       return {
         ...state,
         rendering: false,
-        blobURL: action.blobURL
+        blobURL
       }
+    }
 
     case IMAGE_UNLOAD:
       return {

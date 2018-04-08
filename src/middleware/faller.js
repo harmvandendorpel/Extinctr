@@ -88,11 +88,15 @@ const fallerMiddleware = store => next => (action) => {
 
     case RECORDING_STOP:
       recording = false
-      recorder.save().then(blobURL => store.dispatch(doneRecording(blobURL)))
+      // URL.createObjectURL
+      recorder.save().then(blob => store.dispatch(doneRecording(blob)))
       break
 
     case SET_TRANSPARENT_COLOR:
-      if (!isEqual(store.getState().faller.transparentColor, transparentColor)) {
+      if (!isEqual(
+        store.getState().faller.transparentColor,
+          transparentColor)
+      ) {
         initFaller(store)
       }
       break

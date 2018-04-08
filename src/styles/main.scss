@@ -15,7 +15,6 @@ body {
   background-color: $main-bg-color;
   color: $accent-black;
   font-family: Sans-Serif, helvetica;
-
   display: flex;
   align-items: center;
   justify-content: center;
@@ -25,7 +24,6 @@ body {
 button:focus {
   outline:0;
 }
-
 
 .tool-button {
   font-family: Sans-Serif, helvetica;
@@ -38,6 +36,7 @@ button:focus {
   line-height: 100%;
   float: left;
   border: none;
+  cursor: pointer;
 }
 
 .main-app-container {
