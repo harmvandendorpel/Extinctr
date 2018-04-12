@@ -14,7 +14,7 @@ import {
 } from '../constants/ActionTypes'
 import createFaller from '../canvas/faller'
 import createRecorder from '../canvas/recorder'
-import { doneRecording } from '../actions/recorderActions'
+import { doneRecording, renderingProgress } from '../actions/recorderActions'
 
 let recorder = null
 let faller = null
@@ -81,7 +81,8 @@ const fallerMiddleware = store => next => (action) => {
     case RECORDING_START:
       if (recorder) recorder.destroy()
       recorder = createRecorder(canvas, {
-        backgroundColor: toHex(transparentColor)
+        backgroundColor: toHex(transparentColor),
+        onProgress: progress => store.dispatch(renderingProgress(progress))
       })
       recording = true
       break

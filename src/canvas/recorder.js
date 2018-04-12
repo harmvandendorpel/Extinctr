@@ -1,7 +1,8 @@
 import GIF from 'gif.js.optimized'
+// import GIF from '../encoder'
 
 export default function createRecorder(canvas, {
-  backgroundColor, workers = 5, quality = 10, delay = 50
+  backgroundColor, workers = 5, quality = 10, delay = 50, onProgress
 }) {
   const gif = new GIF({
     workers,
@@ -19,6 +20,7 @@ export default function createRecorder(canvas, {
 
   function save() {
     return new Promise((resolve) => {
+      gif.on('progress', onProgress)
       gif.on('finished', blob => resolve(blob))
       gif.render()
     })

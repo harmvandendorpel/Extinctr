@@ -20,6 +20,7 @@ import Preview from '../components/Preview'
     recording: state.recorder.recording,
     blobURL: state.recorder.blobURL,
     giphyURL: state.recorder.giphyURL,
+    progressRendering: state.recorder.progress,
     rendering: state.recorder.rendering,
     transparentColor: state.faller.transparentColor,
     scatter: state.faller.scatter,
@@ -63,8 +64,9 @@ export default class ScreenRecord extends Component {
   }
 
   recordingButton() {
-    if (this.props.rendering) {
-      return (<button className="tool-button" disabled>rendering...</button>)
+    const { rendering, progressRendering } = this.props
+    if (rendering) {
+      return (<button className="tool-button" disabled>rendering ({progressRendering * 100 << 0}%)...</button>)
     }
     return this.props.recording ?
       <button className="tool-button" onClick={this.props.stopRecording.bind(this)}>■</button> :

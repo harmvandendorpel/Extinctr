@@ -4,6 +4,7 @@ import {
   RECORDING_RENDERING,
   PLAY,
   PAUSE,
+  RENDERING_PROGRESS,
   SET_FRAME_RECORD_INTERVAL,
   RECORDING_DONE,
   RECORDING_UPLOAD_START,
@@ -32,6 +33,15 @@ export function stopRecording() {
     dispatch({ type: PAUSE })
     dispatch({ type: RECORDING_STOP })
     dispatch({ type: RECORDING_RENDERING })
+  }
+}
+
+export function renderingProgress(progress) {
+  return {
+    type: RENDERING_PROGRESS,
+    payload: {
+      progress
+    }
   }
 }
 

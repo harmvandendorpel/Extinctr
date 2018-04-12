@@ -6,12 +6,14 @@ import {
   IMAGE_UNLOAD,
   SET_FRAME_RECORD_INTERVAL,
   RECORDING_UPLOAD_START,
-  RECORDING_UPLOAD_COMPLETE
+  RECORDING_UPLOAD_COMPLETE,
+  RENDERING_PROGRESS
 } from '../constants/ActionTypes'
 
 const initState = {
   recording: false,
   rendering: false,
+  progress: 0,
   uploading: false,
   blobURL: null,
   blob: null,
@@ -40,7 +42,8 @@ export default function recorderReducer(state = initState, action) {
     case RECORDING_RENDERING:
       return {
         ...state,
-        rendering: true
+        rendering: true,
+        progress: 0
       }
 
     case RECORDING_DONE: {
@@ -50,6 +53,14 @@ export default function recorderReducer(state = initState, action) {
         rendering: false,
         blobURL,
         blob
+      }
+    }
+
+    case RENDERING_PROGRESS: {
+      const { progress } = action.payload
+      return {
+        ...state,
+        progress
       }
     }
 
