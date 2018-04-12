@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import DropToUpload from 'react-drop-to-upload'
 import classNames from 'classnames'
 import { connect } from 'react-redux'
+import DropToUpload from './DragToUpload'
 import './ScreenUpload.scss'
 
 import { imageRequest } from '../actions/fallerActions'
@@ -25,24 +25,16 @@ export default class ScreenUpload extends Component {
     }
   }
 
-  handleHoverDropUpload() {
+  handleHoverDropUpload = () => {
     this.setState({ dropAreaHover: true })
   }
 
-  handleLeaveDropUpload() {
+  handleLeaveDropUpload = () => {
     this.setState({ dropAreaHover: false })
   }
 
-  handleDropDataURI([dataURI]) {
+  handleDropDataURI = ([dataURI]) => {
     this.props.imageRequest(dataURI)
-  }
-
-  loadTransTest() {
-    this.props.imageRequest('/img/test4.png')
-  }
-
-  loadWhiteTest() {
-    this.props.imageRequest('/img/test3.png')
   }
 
   render() {
@@ -53,9 +45,9 @@ export default class ScreenUpload extends Component {
 
     return [
       <DropToUpload
-        onOver={this.handleHoverDropUpload.bind(this)}
-        onLeave={this.handleLeaveDropUpload.bind(this)}
-        onDropDataURI={this.handleDropDataURI.bind(this)}
+        onOver={this.handleHoverDropUpload}
+        onLeave={this.handleLeaveDropUpload}
+        onDropDataURI={this.handleDropDataURI}
         key="upload-control"
       >
         <div className={dropAreaClassNames}>

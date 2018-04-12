@@ -40,6 +40,7 @@
     "btoa": true,
     "fetch": true,
     "Web3": true,
-    "web3": true
+    "web3": true,
+    "FileReader": true
   }
 }
