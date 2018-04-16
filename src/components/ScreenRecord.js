@@ -25,7 +25,8 @@ import Preview from '../components/Preview'
     transparentColor: state.faller.transparentColor,
     scatter: state.faller.scatter,
     interactive: state.faller.interactive,
-    frameRecordInterval: state.recorder.frameRecordInterval
+    frameRecordInterval: state.recorder.frameRecordInterval,
+    blobSize: state.recorder.blob ? state.recorder.blob.size : null
   }),
   { ...fallerActions, ...uiActions, ...recorderActions }
 )
@@ -55,12 +56,16 @@ export default class ScreenRecord extends Component {
     hidePreview: PropTypes.func.isRequired,
     startUpload: PropTypes.func.isRequired,
     uploading: PropTypes.bool.isRequired,
-    giphyURL: PropTypes.string
+    giphyURL: PropTypes.string,
+    blobSize: PropTypes.number,
+    progressRendering: PropTypes.number
   }
 
   static defaultProps = {
     blobURL: null,
-    giphyURL: null
+    giphyURL: null,
+    blobSize: null,
+    progressRendering: 0
   }
 
   recordingButton() {
@@ -150,7 +155,8 @@ export default class ScreenRecord extends Component {
       hidePreview,
       startUpload,
       uploading,
-      giphyURL
+      giphyURL,
+      blobSize
     } = this.props
     return [
       <div className={preview.visible ? 'blurred' : null} key="player">
@@ -205,6 +211,7 @@ export default class ScreenRecord extends Component {
         onSave={startUpload}
         uploading={uploading}
         giphyURL={giphyURL}
+        blobSize={blobSize}
       />
     ]
   }

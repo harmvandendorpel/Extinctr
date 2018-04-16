@@ -12,6 +12,7 @@ export default class Preview extends Component {
     onSave: PropTypes.func.isRequired,
     uploading: PropTypes.bool.isRequired,
     giphyURL: PropTypes.string,
+    blobSize: PropTypes.number.isRequired
   }
 
   static defaultProps = {
@@ -22,6 +23,22 @@ export default class Preview extends Component {
     giphyURL: null
   }
 
+  checkFileSizeAndUpload() {
+    const {
+      onSave,
+      blobSize
+    } = this.props
+
+    const megabytes = blobSize / 1024 / 1024 << 0
+
+    if (megabytes > 100) return (
+      <button className="tool-button" disabled>file too large to upload (max. 100mb)</button>
+    )
+
+    return (
+      <button className="tool-button" onClick={onSave}>upload to giphy ({megabytes}mb)</button>
+    )
+  }
   render() {
     const {
       imageURL,
@@ -29,9 +46,8 @@ export default class Preview extends Component {
       width,
       height,
       onClose,
-      onSave,
       uploading,
-      giphyURL
+      giphyURL,
     } = this.props
 
     if (!visible) return null
@@ -52,7 +68,7 @@ export default class Preview extends Component {
             </div>
             <div className="preview-buttons">
               {!uploading && !giphyURL && [
-                <button className="tool-button" onClick={onSave}>upload to giphy...</button>,
+                this.checkFileSizeAndUpload(),
                 <button className="tool-button"><a href={imageURL} target="_blank">view in browser</a></button>,
                 <button className="tool-button" onClick={onClose}>close</button>,
               ]}
